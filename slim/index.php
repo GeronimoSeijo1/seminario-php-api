@@ -5,10 +5,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/config/DB.php';
+
 
 $app = AppFactory::create();
+
 $app->addRoutingMiddleware();
+$app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
+
 $app->add( function ($request, $handler) {
     $response = $handler->handle($request);
 
