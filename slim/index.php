@@ -6,6 +6,7 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/DB.php';
+require __DIR__ . '/controllers/UsuarioController.php';
 
 
 $app = AppFactory::create();
@@ -33,6 +34,6 @@ $app->get('/hola', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/users', \UserController::class . '::obtenerUsuarios');
+$app->get('/users', \UsuarioController::class . '::obtenerUsuarios');
 
 $app->run();
