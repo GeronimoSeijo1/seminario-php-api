@@ -28,7 +28,7 @@ $app->add( function ($request, $handler) {
 // ACÁ VAN LOS ENDPOINTS
 
 // Root test route
-$app->get('/', function (Request $request, Response $response) {
+$app->get('/hola', function (Request $request, Response $response) {
     $response->getBody()->write(json_encode(['message' => 'Hello World!']));
     return $response;
 });
