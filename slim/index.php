@@ -33,5 +33,6 @@ $app->get('/hola', function (Request $request, Response $response) {
     return $response;
 });
 
+$app->get('/users', \UserController::class . '::obtenerUsuarios');
 
 $app->run();
