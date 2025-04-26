@@ -11,6 +11,7 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/DB.php';
+require __DIR__ . '/controllers/UsuarioController.php';
 
 $app = AppFactory::create();
 
@@ -35,6 +36,7 @@ $userModel = new User();
 $userController = new UserController($userModel);
 $authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
 
+<<<<<<< HEAD
 //$app->post('/usuarios/registro', [UserController::class, 'registro']);
 $app->post('/usuarios/registro', function ($request, $response) use ($userController) {
     return $userController->registro($request, $response);
@@ -54,3 +56,14 @@ $app->group('/usuarios', function ($group) use ($userController) { // Importamos
 })->add($authMiddleware);
 
 $app->run();
+=======
+// Root test route
+$app->get('/hola', function (Request $request, Response $response) {
+    $response->getBody()->write(json_encode(['message' => 'Hello World!']));
+    return $response;
+});
+
+$app->get('/users', \UsuarioController::class . '::obtenerUsuarios');
+
+$app->run();
+>>>>>>> origin/Thiago
