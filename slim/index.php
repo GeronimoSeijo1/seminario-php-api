@@ -1,17 +1,22 @@
 <?php
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-use App\Controllers\Auth\AuthController;
+//use App\Controllers\Auth\AuthController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
-use App\Models\User;
+//use App\Models\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
+require_once __DIR__ . '/src/Models/User.php';
+use App\Models\User;
+/*require __DIR__ . '/src/Controllers/Auth/AuthController;.php'
+use App\Controllers\Auth\AuthController;*/
+
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/DB.php';
-require __DIR__ . '/controllers/UsuarioController.php';
+require __DIR__ . '/src/Controllers/UserController.php';
 
 $app = AppFactory::create();
 
@@ -32,16 +37,17 @@ $app->add(function ($request, $handler) {
         ->withHeader('Content-Type', 'application/json');
 });
 
+
 $userModel = new User(); 
 $userController = new UserController($userModel);
-$authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
+//$authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
 
 //$app->post('/usuarios/registro', [UserController::class, 'registro']);
 $app->post('/usuarios/registro', function ($request, $response) use ($userController) {
     return $userController->registro($request, $response);
 });
 //$app->post('/login', [Auth\AuthController::class, 'login']);
-$app->post('/login', function ($request, $response) use ($authController) {
+/*$app->post('/login', function ($request, $response) use ($authController) {
     return $authController->login($request, $response);
 });
 
@@ -54,8 +60,8 @@ $app->group('/usuarios', function ($group) use ($userController) { // Importamos
     $group->get('/{usuario}', [$userController, 'get']);   // Usamos la instancia
 })->add($authMiddleware);
 
-$app->post('/mazos', function ($request, $response) use ($mazoController){
+/*$app->post('/mazos', function ($request, $response) use ($mazoController){
     return $mazoController->crearMazo($request,$response);
-})
+})*/
 
 $app->run();
