@@ -20,6 +20,10 @@ $app->addBodyParsingMiddleware();
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
 
+$app->get('/', function ($request, $response, $args) {
+    $response->getBody()->write("¡Funciono!");
+    return $response;
+});
 
 // Add CORS middleware
 $app->add(function ($request, $handler) {
@@ -36,7 +40,7 @@ $userController = new UserController($userModel);
 $authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
 
 //$app->post('/usuarios/registro', [UserController::class, 'registro']);
-$app->post('/usuarios/registro', function ($request, $response) use ($userController) {
+$app->post('/registro', function ($request, $response) use ($userController) {
     return $userController->registro($request, $response);
 });
 //$app->post('/login', [Auth\AuthController::class, 'login']);
