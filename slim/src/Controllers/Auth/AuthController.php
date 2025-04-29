@@ -24,7 +24,7 @@ class AuthController
     {
         $data = $request->getParsedBody();
         $usuario = $data['usuario'] ?? '';
-        $clave = $data['clave'] ?? '';
+        $clave = $data['password'] ?? '';
 
         $user = $this->userModel->getUserByUsername($usuario);
 

@@ -8,15 +8,13 @@ use DB; // Importa la clase DB
 class User
 {
    
-    public static function createUser(string $nombre, string $usuario, string $clave, ?string $token = null, ?string $vencimientoToken = null): bool
+    public static function createUser(string $nombre, string $usuario, string $clave): bool
     {
         $db = DB::getConnection();
-        $stmt = $db->prepare("INSERT INTO usuario (nombre, usuario, password, token, vencimiento_token) VALUES (:nombre, :usuario, :password, :token, :vencimiento_token)");
+        $stmt = $db->prepare("INSERT INTO usuario (nombre, usuario, password) VALUES (:nombre, :usuario, :password)");
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':usuario', $usuario);
         $stmt->bindParam(':password', $clave);
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':vencimiento_token', $vencimientoToken);
         return $stmt->execute();
     }
 

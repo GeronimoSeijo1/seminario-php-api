@@ -40,11 +40,8 @@ class UserController
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        $token = bin2hex(random_bytes(32)); // Generar un token básico
-        $vencimientoToken = (new \DateTime())->modify('+1 hour')->format('Y-m-d H:i:s'); // Establecer vencimiento a 1 hora
-
-        if ($this->userModel->createUser($nombre, $usuario, $password, $token, $vencimientoToken)) {
-            $response->getBody()->write(json_encode(['message' => 'Usuario registrado exitosamente.', 'token' => $token])); // Devolvemos el token
+        if ($this->userModel->createUser($nombre, $usuario, $password)) {
+            $response->getBody()->write(json_encode(['message' => 'Usuario registrado exitosamente.']));
             return $response->withStatus(201)->withHeader('Content-Type', 'application/json'); // 201 Created
         } else {
             $response->getBody()->write(json_encode(['error' => 'Error al registrar el usuario.']));
