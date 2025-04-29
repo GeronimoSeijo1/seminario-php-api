@@ -44,14 +44,14 @@ $app->add(function ($request, $handler) {
 
 $userModel = new User(); 
 $userController = new UserController($userModel);
-//$authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
+$authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
 
 //$app->post('/usuarios/registro', [UserController::class, 'registro']);
 $app->post('/registro', function ($request, $response) use ($userController) {
     return $userController->registro($request, $response);
 });
 //$app->post('/login', [Auth\AuthController::class, 'login']);
-/*$app->post('/login', function ($request, $response) use ($authController) {
+$app->post('/login', function ($request, $response) use ($authController) {
     return $authController->login($request, $response);
 });
 
