@@ -1,16 +1,16 @@
 <?php
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-//use App\Controllers\Auth\AuthController;
+use App\Controllers\Auth\AuthController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
-//use App\Models\User;
+use App\Models\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-require_once __DIR__ . '/src/Models/User.php';
-use App\Models\User;
+/*require_once __DIR__ . '/src/Models/User.php';
+use App\Models\User;*/
 /*require __DIR__ . '/src/Controllers/Auth/AuthController;.php'
 use App\Controllers\Auth\AuthController;*/
 
