@@ -3,8 +3,10 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 use App\Controllers\Auth\AuthController;
 use App\Controllers\UserController;
+use App\Controllers\MazoController;
 use App\Middleware\AuthMiddleware;
 use App\Models\User;
+use App\Models\Mazo;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -45,6 +47,8 @@ $app->add(function ($request, $handler) {
 $userModel = new User(); 
 $userController = new UserController($userModel);
 $authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
+$mazoModel = new Mazo();
+$mazoController = new MazoController($mazoModel);
 
 //$app->post('/usuarios/registro', [UserController::class, 'registro']);
 $app->post('/registro', function ($request, $response) use ($userController) {
@@ -64,8 +68,8 @@ $app->group('/usuarios', function ($group) use ($userController) { // Importamos
     $group->get('/{usuario}', [$userController, 'get']);   // Usamos la instancia
 })->add($authMiddleware);
 
-/*$app->post('/mazos', function ($request, $response) use ($mazoController){
+$app->post('/mazos', function ($request, $response, $args) use ($mazoController){
     return $mazoController->crearMazo($request,$response);
-})*/
+})->add($authMiddleware);
 
 $app->run();

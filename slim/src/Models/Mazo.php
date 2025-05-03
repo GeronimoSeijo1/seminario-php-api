@@ -14,18 +14,34 @@ class Mazo
         $totalMazos = $stmt->fetchColumn();
 
         if ($totalMazos > 2) {
-            return null;
+            return 0;
         }
+        //Inserto en la tabla mazo
+        $stmt = $db->prepare("INSERT INTO mazo (usuario_id, nombre) VALUES (:usuario_id, :nombre)");
+        if ($stmt->execute([
+            ':usuario_id' => $usuario_id,
+            ':nombre' => $nombre
+        ]))
+        {
+            //Inserto las cartas del mazo
+            $estado = 'en_mazo';
+            $stmt = $db->prepare("SELECT MAX(id) AS max_id FROM mazo");
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $mazo_id = $row['max_id'] ?? 0;
+            $values = [];
+            foreach ($carta_id as $id) {
+                $values[] = "($id, $mazo_id, '$estado')";
+            }
+            $valuesString = implode(", ", $values);
+            $stmt = $db->prepare("INSERT INTO `mazo_carta` (`carta_id`, `mazo_id`, `estado`) VALUES $valuesString");
+            $stmt->execute();
+            return $mazo_id;
+        }
+        else 
+        {
+            return 0;
 
-        
-        //Inserto las cartas del mazo
-        $estado = 'en_mazo';
-        $values = [];
-        foreach ($carta_id as $index => $id) {
-            $values[] = "(" . ($index + 1) . ", $id, $mazo_id, '$estado')";
         }
-        $valuesString = implode(", ", $values);
-        $stmt = $db->prepare("INSERT INTO `mazo_carta` (`id`, `carta_id`, `mazo_id`, `estado`) VALUES $valuesString");
-        $stmt->execute();
     }
 }
