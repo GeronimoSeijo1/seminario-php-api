@@ -25,7 +25,7 @@ class AuthMiddleware
 
     public static function initialize(): self
     {
-        $db = DB::getConnection(); // Obtén la conexión usando la clase DB cargada
+        $db = DB::getConnection();
         return new self($_ENV['JWT_SECRET'] ?? 'your-secret-key', $db);
     }
 
@@ -58,7 +58,7 @@ class AuthMiddleware
             }
 
             $userId = $decoded->sub;
-            $userModel = new User($this->db); // Instanciamos el modelo con la conexión
+            $userModel = new User($this->db);
             $user = $userModel->getUserById($userId);
 
             if (!$user) {
