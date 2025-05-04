@@ -44,4 +44,70 @@ class Mazo
 
         }
     }
+
+    public static function jugado(int $mazo_id){
+        $db = DB::getConnection();
+        $sql = "SELECT COUNT(*) as veces_usado FROM partida WHERE mazo_id = :mazo_id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':mazo_id' => $mazo_id]);
+        
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $resultado['veces_usado'] > 0; 
+    }
+
+    public static function eliminar(int $mazo_id){
+        $db = DB::getConnection();
+        //elimino las cartas del mazo
+        $stmt = $db->prepare("DELETE FROM mazo_carta WHERE mazo_id = :mazo_id");
+        if ($stmt->execute([':mazo_id' => $mazo_id])) 
+        {
+        //elimino el mazo
+        $stmt = $db->prepare("DELETE FROM mazo WHERE id = :mazo_id");
+        return $stmt->execute([':mazo_id' => $mazo_id]);
+        }
+        else return null;
+    }
+
+    public static function modificarNombre(String $nombre, int $mazo_id){
+        $db = DB::getConnection();
+        //actualizo el nombre del mazo
+        $stmt = $db->prepare("UPDATE mazo SET nombre = :nombre WHERE id = :id");
+        return $stmt->execute([':nombre' => $nombre,':id' => $mazo_id]);
+    }
+
+    public static function listaMazos(int $usuario_id){
+        $db = DB::getConnection();
+        $stmt = $db->prepare("SELECT * FROM mazo WHERE usuario_id = :usuario_id");
+        $stmt->execute([':usuario_id' => $usuario_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function obtenerAtributoId($nombre){
+        $db = DB::getConnection();
+        $stmt = $db->prepare("SELECT id FROM atributo WHERE nombre = :nombre");
+        $stmt->execute([':nombre' => $nombre]);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado['id'];
+    }
+
+    public static function listaCartas($atributo_id,$nombre){
+        $db = DB::getConnection();
+        $sql = "SELECT nombre, atributo_id, ataque FROM carta WHERE 1=1";
+        $params = [];
+
+        if ($atributo_id!==null) {
+            $sql .= " AND atributo_id = :atributo_id";
+            $params[':atributo_id'] = $atributo_id;
+        }
+
+        if ($nombre!==null) {
+            $sql .= " AND nombre LIKE :nombre";
+            $params[':nombre'] = "%$nombre%";
+        }
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

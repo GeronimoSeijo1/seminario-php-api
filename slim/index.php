@@ -72,4 +72,20 @@ $app->post('/mazos', function ($request, $response, $args) use ($mazoController)
     return $mazoController->crearMazo($request,$response);
 })->add($authMiddleware);
 
+$app->delete('/mazos/{mazo}', function ($request, $response, $args) use ($mazoController){
+    return $mazoController->eliminarMazo($request,$response,$args);
+})->add($authMiddleware);
+
+$app->put('/mazos/{mazo}', function ($request, $response, $args) use ($mazoController){
+    return $mazoController->modificarMazo($request,$response,$args);
+})->add($authMiddleware);
+
+$app->get('/usuarios/{usuario}/mazos', function ($request, $response, $args) use ($mazoController){
+    return $mazoController->listarMazos($request,$response,$args);
+})->add($authMiddleware);
+
+$app->get('/cartas', function ($request, $response, $args) use ($mazoController){
+    return $mazoController->listarCartas($request,$response,$args);
+})->add($authMiddleware);
+
 $app->run();

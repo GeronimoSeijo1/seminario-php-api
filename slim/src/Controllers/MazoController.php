@@ -55,4 +55,88 @@ class MazoController
         }
     }
 
+
+    public function eliminarMazo(Request $request, Response $response, array $args)
+    {
+        if($this->mazoModel->jugado($args['mazo']))
+        {
+            $response->getBody()->write(json_encode(['error' => 'Mazo ya utilizado, no se puede eliminar']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+        if($this->mazoModel->eliminar($args['mazo']))
+        {
+            $response->getBody()->write(json_encode(['exito' => 'Mazo eliminado']));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+        else 
+        {
+            $response->getBody()->write(json_encode(['error' => 'No se pudo eliminar el mazo, id incorrecto']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+    }
+
+    public function modificarMazo(Request $request, Response $response, array $args)
+    {
+        $data = $request->getParsedBody();
+        $nombre = $data['nombre'];
+        $mazo_id = $args['mazo'];
+        if($this->mazoModel->modificarNombre($nombre,$mazo_id))
+        {
+            $response->getBody()->write(json_encode(['exito' => 'Nombre de mazo modificado']));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+        else 
+        {
+            $response->getBody()->write(json_encode(['error' => 'No se pudo modificar el nombre del mazo, id incorrecto']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+    }
+
+    public function listarMazos(Request $request, Response $response, array $args)
+    {
+        $user = $request->getAttribute('user');
+        if ($user['usuario']==$args['usuario'])
+        {
+            $lista = $this->mazoModel->listaMazos($user['id']);
+            if(empty($lista))
+            {
+                $response->getBody()->write(json_encode(['error' => 'El usuario no tiene mazos']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+            else
+            {
+                $response->getBody()->write(json_encode(['lista de mazos del usuario logueado' => $lista]));
+                return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+            }
+        }
+        else 
+        {
+            $response->getBody()->write(json_encode(['error' => 'Acceso invalido a la informacion de este usuario']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+    }
+
+    public function listarCartas(Request $request, Response $response, array $args)
+    {
+        $params = $request->getQueryParams();
+        $atributo = $params['atributo'] ?? null;
+        if ($atributo){
+            $atributo_id = $this->mazoModel->obtenerAtributoId($atributo);
+        }
+        else {
+            $atributo_id = null;
+        }
+        $nombre = $params['nombre'] ?? null;
+        $lista = $this->mazoModel->listaCartas($atributo_id,$nombre);
+        if(empty($lista))
+        {
+            $response->getBody()->write(json_encode(['error' => 'No hay cartas que cumplan con los criterios']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+        else
+        {
+            $response->getBody()->write(json_encode(['lista de cartas por criterios' => $lista]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+    }
 }
