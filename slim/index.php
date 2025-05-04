@@ -2,9 +2,14 @@
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 use App\Controllers\Auth\AuthController;
+use App\Controllers\JuegoController;
 use App\Controllers\UserController;
 use App\Controllers\JuegoController;
 use App\Middleware\AuthMiddleware;
+use App\Models\Carta;
+use App\Models\Jugada;
+use App\Models\MazoCarta;
+use App\Models\Partida;
 use App\Models\User;
 use App\Models\Mazo;
 use App\Models\Partida;
@@ -42,32 +47,27 @@ $app->add(function ($request, $handler) {
 $userModel = new User(); 
 $userController = new UserController($userModel);
 $authController = new AuthController($userModel, $_ENV['JWT_SECRET'] ?? 'your-secret-key');
+$mazoCartaModel = new MazoCarta();
+$mazoModel = new Mazo();
+$jugadaModel = new Jugada();
+$partidaModel = new Partida();
+$cartaModel = new Carta();
+$juegoController = new JuegoController($mazoModel,$mazoCartaModel, $jugadaModel, $partidaModel, $cartaModel);
 
-//$app->post('/usuarios/registro', [UserController::class, 'registro']);
-$app->post('/registro', function ($request, $response) use ($userController) {
-    return $userController->registro($request, $response);
-});
-//$app->post('/login', [Auth\AuthController::class, 'login']);
-$app->post('/login', function ($request, $response) use ($authController) {
-    return $authController->login($request, $response);
-});
+$app->post('/registro', [$userController, 'registro']);
 
-// Initialize the auth middleware using the static method
+$app->post('/login', [$authController, 'login']);
+
 $authMiddleware = AuthMiddleware::initialize();
 
 // Agrupar y proteger las rutas de usuario
-$app->group('/usuarios', function ($group) use ($userController) { // Importamos $userController con 'use'
-    $group->put('/{usuario}', [$userController, 'update']); // Usamos la instancia
-    $group->get('/{usuario}', [$userController, 'get']);   // Usamos la instancia
+$app->group('/usuarios', function ($group) use ($userController) { 
+    $group->put('/{id:[0-9]+}', [$userController, 'update']); // El parámetro es 'id' y forzamos que sea número
+    $group->get('/{id:[0-9]+}', [$userController, 'get']);    
 })->add($authMiddleware);
 
-$mazoModel = new Mazo();
-$partidaModel = new Partida();
-$cartaModel = new Carta();
-
-$juegoController = new JuegoController($mazoModel, $partidaModel, $cartaModel);
 $app->post('/partidas', [$juegoController, 'crearPartida'])->add($authMiddleware);
+$app->post('/jugadas', [$juegoController, 'realizarJugada'])->add($authMiddleware);
 $app->get('/usuarios/{usuario}/partidas/{partida}/cartas', [$juegoController, 'obtenerCartasEnMano'])->add($authMiddleware);
-
 
 $app->run();
