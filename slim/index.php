@@ -3,8 +3,12 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 use App\Controllers\Auth\AuthController;
 use App\Controllers\UserController;
+use App\Controllers\JuegoController;
 use App\Middleware\AuthMiddleware;
 use App\Models\User;
+use App\Models\Mazo;
+use App\Models\Partida;
+use App\Models\Carta;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -56,5 +60,14 @@ $app->group('/usuarios', function ($group) use ($userController) { // Importamos
     $group->put('/{usuario}', [$userController, 'update']); // Usamos la instancia
     $group->get('/{usuario}', [$userController, 'get']);   // Usamos la instancia
 })->add($authMiddleware);
+
+$mazoModel = new Mazo();
+$partidaModel = new Partida();
+$cartaModel = new Carta();
+
+$juegoController = new JuegoController($mazoModel, $partidaModel, $cartaModel);
+$app->post('/partidas', [$juegoController, 'crearPartida'])->add($authMiddleware);
+$app->get('/usuarios/{usuario}/partidas/{partida}/cartas', [$juegoController, 'obtenerCartasEnMano'])->add($authMiddleware);
+
 
 $app->run();
