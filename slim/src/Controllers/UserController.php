@@ -54,6 +54,7 @@ class UserController
             error_log("Error de base de datos al registrar usuario: " . $e->getMessage());
             // Devolver una respuesta de error genérica al cliente
             $response->getBody()->write(json_encode(['error' => 'Error interno del servidor al registrar el usuario. Por favor, inténtelo de nuevo más tarde.']));
+
             return $response->withStatus(500)->withHeader('Content-Type', 'application/json'); // 500 Internal Server Error
         } catch (\Exception $e) {
             // Capturar otras excepciones generales

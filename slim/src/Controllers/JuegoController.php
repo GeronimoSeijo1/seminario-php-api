@@ -6,51 +6,127 @@ use App\Models\Carta;
 use App\Models\Jugada as JugadaModel;
 use App\Models\MazoCarta;
 use App\Models\Partida;
+use App\Models\Mazo;
+use App\Models\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class JuegoController
 {
+    private $mazoModel;
     private $mazoCartaModel;
     private $jugadaModel;
     private $partidaModel;
     private $cartaModel;
 
     public function __construct(
+        Mazo $mazoModel,
         MazoCarta $mazoCartaModel,
         JugadaModel $jugadaModel,
         Partida $partidaModel,
         Carta $cartaModel
     ) {
+        $this->mazoModel = $mazoModel;
         $this->mazoCartaModel = $mazoCartaModel;
         $this->jugadaModel = $jugadaModel;
         $this->partidaModel = $partidaModel;
         $this->cartaModel = $cartaModel;
     }
 
+    public function crearPartida(Request $request, Response $response, $args){
+        try{
+            $user = $request->getAttribute('user');
+            $idUsuario = $user['id'];
+
+            //Obtiene mazo_id pasado por postman
+            $datos = $request->getParsedBody();
+            $idMazo = $datos['mazo_id'] ?? null;
+
+            if(!$idMazo){
+                $response->getBody()->write(json_encode(['error' => 'Debe proporcionar mazo_id']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+
+            //Valida que el mazo pertenezca al usuario
+            if(!$this->mazoModel->perteneceAUsuario($idMazo, $idUsuario)){
+                $response->getBody()->write(json_encode(['error' => 'El mazo no pertenece al usuario logueado']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            //Crea partida para usuario logueado, con fecha actual y estado "en_curso"
+            $idPartida = $this->partidaModel->crear($idUsuario, $idMazo);
+            if(!$idPartida){
+                $response->getBody()->write(json_encode(['error' => 'No se pudo crear la partida']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+
+            //Actualiza el estado de las cartas a "en_mano"
+            $this->mazoModel->actualizarCartasEnMano($idMazo);
+
+            //Lista de las cartas del usuario -> devuelve su id y nombre
+            $cartas = $this->cartaModel->obtenerCartasDelMazo($idMazo);
+
+            $respuesta = [
+                'id_partida' => $idPartida,
+                'cartas' => $cartas
+            ];
+
+            $response->getBody()->write(json_encode($respuesta));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+
+        } catch (\PDOException $e) {
+            error_log("Error de base de datos al crear la partida: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            error_log("Error general al crear la partida: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        }
+        
+    }
+
+    public function obtenerCartasEnMano(Request $request, Response $response, $args){
+
+        try{
+            $usuarioId = (int) $args['usuario'];
+            $partidaId = (int) $args['partida'];
+            
+            $user = $request->getAttribute('user');
+            $usuarioLogueadoId = $user['id'];
+
+            //Verifico que los datos que se piden sean del usuario logueado
+            if ($usuarioId !== $usuarioLogueadoId) {
+                $response->getBody()->write(json_encode(['error' => 'No tienes permiso para ver la información de este usuario.']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            //Valida que la partida pertenezca al usuario
+            if (!$this->partidaModel->perteneceAUsuario($partidaId, $usuarioId)) {
+                $response->getBody()->write(json_encode(['error' => 'La partida no pertenece al usuario']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            // Lista las cartas 'en_mano' del usuario
+            $cartas = $this->cartaModel->obtenerCartasDeLaPartida($partidaId);
+
+            $response->getBody()->write(json_encode(['cartas' => $cartas]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+
+        } catch (\PDOException $e) {
+            error_log("Error de base de datos al obtener las cartas: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            error_log("Error general al obtener las cartas: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        }
+        
+    }
+
     private function jugadaServidor(): ?int
     {
-        /*// Obtengo las cartas del server
-        $cartasEnManoServidor = $this->mazoCartaModel->obtenerCartasEnManoPorMazo($mazoIdServidor);
-
-        if (empty($cartasEnManoServidor)) {
-            return null; // El servidor no tiene cartas en mano
-        }
-
-        // Eligo una carta aleatoria de las cartas en mano
-        $indiceAleatorio = array_rand($cartasEnManoServidor);
-        $cartaJugadaInfo = $cartasEnManoServidor[$indiceAleatorio];
-        $cartaIdServidor = $cartaJugadaInfo['carta_id'];
-
-        // Actualizar el estado de la carta a "descartado"
-        $mazoCartaServidor = $this->mazoCartaModel->obtenerCartaEnManoPorCartaIdMazoId($cartaIdServidor, $mazoIdServidor);
-        if ($mazoCartaServidor) {
-            $this->mazoCartaModel->actualizarEstadoCarta($mazoCartaServidor['id'], 'descartado');
-            return $cartaIdServidor;
-        }
-
-        return null; // No se encontró la carta en mano para descartar*/
-        
         // Obtengo las cartas del server
         $mazoIdServidor =  1;
         $cartasEnManoServidor = $this->mazoCartaModel->obtenerCartasEnManoPorMazo($mazoIdServidor);
@@ -158,34 +234,6 @@ class JuegoController
             return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
     }
-
-    /*private function determinarGanadorJugada(int $cartaUsuarioId, int $cartaServidorId): string
-    {
-        $cartaUsuario = $this->cartaModel->obtenerCartaPorId($cartaUsuarioId);
-        $cartaServidor = $this->cartaModel->obtenerCartaPorId($cartaServidorId);
-
-        $ataqueUsuario = $cartaUsuario['ataque'];
-        $atributoUsuarioId = $cartaUsuario['atributo_id'];
-        $ataqueServidor = $cartaServidor['ataque'];
-        $atributoServidorId = $cartaServidor['atributo_id'];
-        
-
-        // Aplicar el bono de ataque por atributo
-        if ($this->cartaModel->verificaGanadorAtributo($atributoUsuarioId, $atributoServidorId)){
-            $ataqueUsuario *= 1.30; // +30% al ataque del usuario
-        } elseif ($this->cartaModel->verificaGanadorAtributo($atributoServidorId, $atributoUsuarioId)) {
-            $ataqueServidor *= 1.30; // +30% al ataque del servidor
-        }
-
-        // Comparar los ataques
-        if ($ataqueUsuario > $ataqueServidor) {
-            return 'gano';
-        } elseif ($ataqueUsuario < $ataqueServidor) {
-            return 'perdio';
-        } else {
-            return 'empato';
-        }
-    }*/
 
     private function determinarGanadorJugada(int $cartaUsuarioId, int $cartaServidorId): array
     {
