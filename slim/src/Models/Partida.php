@@ -57,4 +57,20 @@ class Partida
         $stmt->bindParam(':id', $partidaId);
         return $stmt->execute();
     }
+
+    public static function obtenerEstadisticasPorUsuario(): array
+    {
+        $db = DB::getConnection();
+        $stmt = $db->prepare("
+            SELECT
+                usuario_id,
+                SUM(CASE WHEN el_usuario = 'gano' AND estado = 'finalizada' THEN 1 ELSE 0 END) as partidas_ganadas,
+                SUM(CASE WHEN el_usuario = 'perdio' AND estado = 'finalizada' THEN 1 ELSE 0 END) as partidas_perdidas,
+                SUM(CASE WHEN el_usuario = 'empato' AND estado = 'finalizada' THEN 1 ELSE 0 END) as partidas_empatadas
+            FROM partida
+            GROUP BY usuario_id;
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

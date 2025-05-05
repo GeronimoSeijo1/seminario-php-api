@@ -62,7 +62,8 @@ class JuegoController
 
             //Actualiza el estado de las cartas a "en_mano"
             $this->mazoModel->actualizarCartasEnMano($idMazo);
-
+            //Actualizo el estado de las cartas del server a "en_mano"
+            $this->mazoModel->actualizarCartasEnMano(1);
             //Lista de las cartas del usuario -> devuelve su id y nombre
             $cartas = $this->cartaModel->obtenerCartasDelMazo($idMazo);
 
@@ -109,8 +110,17 @@ class JuegoController
 
             // Lista las cartas 'en_mano' del usuario
             $cartas = $this->cartaModel->obtenerCartasDeLaPartida($partidaId);
+            $cartasConAtributoNombre = [];
+            // Obtener el nombre del atributo para cada carta
+            foreach ($cartas as $carta) {
+                $atributo = $this->cartaModel->obtenerNombreAtributoPorId($carta['atributo_id']);
+                $cartasConAtributoNombre[] = [
+                    'nombre_carta' => $carta['nombre'],
+                    'nombre_atributo' => $atributo['nombre'] ?? null
+                ];
+            }
 
-            $response->getBody()->write(json_encode(['cartas' => $cartas]));
+            $response->getBody()->write(json_encode(['cartas' => $cartasConAtributoNombre]));
             return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
 
         } catch (\PDOException $e) {
@@ -219,7 +229,7 @@ class JuegoController
             } else {
                 $error = ['error' => 'El servidor no pudo realizar una jugada.'];
                 $response->getBody()->write(json_encode($error));
-                return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+                return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
             }
 
         } catch (\PDOException $e) {
@@ -290,6 +300,23 @@ class JuegoController
             return 'perdio';
         } else {
             return 'empato';
+        }
+    }
+
+    public function obtenerEstadisticasPorUsuario(Request $request, Response $response)
+    {
+        try {
+            $estadisticas = $this->partidaModel->obtenerEstadisticasPorUsuario();
+            $response->getBody()->write(json_encode($estadisticas));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        } catch (\PDOException $e) {
+            error_log("Error de base de datos al obtener estadísticas por usuario: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor al obtener las estadísticas por usuario. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            error_log("Error general al obtener estadísticas por usuario: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
     }
 }
