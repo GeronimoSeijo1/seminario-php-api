@@ -69,20 +69,29 @@ class MazoController
     public function eliminarMazo(Request $request, Response $response, array $args)
     {
         try{
-            if($this->mazoModel->jugado($args['mazo']))
-            {
-                $response->getBody()->write(json_encode(['error' => 'Mazo ya utilizado, no se puede eliminar']));
-                return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
-            }
-            if($this->mazoModel->eliminar($args['mazo']))
-            {
-                $response->getBody()->write(json_encode(['exito' => 'Mazo eliminado']));
-                return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+            $user = $request->getAttribute('user');
+            $usuario_id = $user['id'];
+            if ($this->mazoModel->perteneceAUsuario($args['mazo'],$usuario_id)){
+                if($this->mazoModel->jugado($args['mazo']))
+                {
+                    $response->getBody()->write(json_encode(['error' => 'Mazo ya utilizado, no se puede eliminar']));
+                    return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
+                }
+                if($this->mazoModel->eliminar($args['mazo']))
+                {
+                    $response->getBody()->write(json_encode(['exito' => 'Mazo eliminado']));
+                    return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+                }
+                else 
+                {
+                    $response->getBody()->write(json_encode(['error' => 'No se pudo eliminar el mazo, id incorrecto']));
+                    return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+                }
             }
             else 
             {
-                $response->getBody()->write(json_encode(['error' => 'No se pudo eliminar el mazo, id incorrecto']));
-                return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+                $response->getBody()->write(json_encode(['error' => 'El mazo no pertenece al usuario logueado']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
             }
         } catch (\PDOException $e) {
             error_log("Error de base de datos al eliminar mazo: " . $e->getMessage());
@@ -119,7 +128,7 @@ class MazoController
             else 
             {
                 $response->getBody()->write(json_encode(['error' => 'El mazo no pertenece al usuario logueado']));
-                    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
             }
         } catch (\PDOException $e) {
             error_log("Error de base de datos al modificar mazo: " . $e->getMessage());
