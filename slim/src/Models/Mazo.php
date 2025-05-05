@@ -56,24 +56,30 @@ class Mazo
         return $resultado['veces_usado'] > 0; 
     }
 
-    public static function eliminar(int $mazo_id){
+    public static function eliminar(int $mazo_id): ?bool
+    {
         $db = DB::getConnection();
-        //elimino las cartas del mazo
-        $stmt = $db->prepare("DELETE FROM mazo_carta WHERE mazo_id = :mazo_id");
-        if ($stmt->execute([':mazo_id' => $mazo_id])) 
-        {
-        //elimino el mazo
-        $stmt = $db->prepare("DELETE FROM mazo WHERE id = :mazo_id");
-        return $stmt->execute([':mazo_id' => $mazo_id]);
+        // Elimino las cartas del mazo
+        $stmtCartas = $db->prepare("DELETE FROM mazo_carta WHERE mazo_id = :mazo_id");
+        if ($stmtCartas->execute([':mazo_id' => $mazo_id])) {
+            // Elimino el mazo
+            $stmtMazo = $db->prepare("DELETE FROM mazo WHERE id = :mazo_id");
+            $stmtMazo->execute([':mazo_id' => $mazo_id]);
+            // Verifico si se eliminó alguna fila de la tabla 'mazo'
+            return $stmtMazo->rowCount() > 0;
+        } else {
+            return null; // Indica un error al eliminar las cartas del mazo
         }
-        else return null;
     }
 
-    public static function modificarNombre(String $nombre, int $mazo_id){
+    public static function modificarNombre(String $nombre, int $mazo_id): bool
+    {
         $db = DB::getConnection();
-        //actualizo el nombre del mazo
+        // Actualizo el nombre del mazo
         $stmt = $db->prepare("UPDATE mazo SET nombre = :nombre WHERE id = :id");
-        return $stmt->execute([':nombre' => $nombre,':id' => $mazo_id]);
+        $stmt->execute([':nombre' => $nombre, ':id' => $mazo_id]);
+        // Verifico si se modificó alguna fila
+        return $stmt->rowCount() > 0;
     }
 
     public static function listaMazos(int $usuario_id){
@@ -83,12 +89,17 @@ class Mazo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function obtenerAtributoId($nombre){
+    public static function obtenerAtributoId($nombre): ?int
+    {
         $db = DB::getConnection();
         $stmt = $db->prepare("SELECT id FROM atributo WHERE nombre = :nombre");
         $stmt->execute([':nombre' => $nombre]);
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $resultado['id'];
+        if ($resultado) {
+            return $resultado['id'];
+        } else {
+            return null; // Devolver null si el atributo no se encuentra
+        }
     }
 
     public static function listaCartas($atributo_id,$nombre){

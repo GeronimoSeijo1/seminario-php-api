@@ -5,7 +5,6 @@ use App\Controllers\Auth\AuthController;
 use App\Controllers\JuegoController;
 use App\Controllers\UserController;
 use App\Controllers\MazoController;
-use App\Controllers\JuegoController;
 use App\Middleware\AuthMiddleware;
 use App\Models\Carta;
 use App\Models\Jugada;
@@ -13,8 +12,6 @@ use App\Models\MazoCarta;
 use App\Models\Partida;
 use App\Models\User;
 use App\Models\Mazo;
-use App\Models\Partida;
-use App\Models\Carta;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -62,6 +59,8 @@ $app->post('/registro', [$userController, 'registro']);
 
 $app->post('/login', [$authController, 'login']);
 
+$app->get('/estadisticas', [$juegoController, 'obtenerEstadisticasPorUsuario']);
+
 $authMiddleware = AuthMiddleware::initialize();
 
 // Agrupar y proteger las rutas de usuario
@@ -74,24 +73,14 @@ $app->post('/partidas', [$juegoController, 'crearPartida'])->add($authMiddleware
 $app->post('/jugadas', [$juegoController, 'realizarJugada'])->add($authMiddleware);
 $app->get('/usuarios/{usuario}/partidas/{partida}/cartas', [$juegoController, 'obtenerCartasEnMano'])->add($authMiddleware);
 
-$app->post('/mazos', function ($request, $response, $args) use ($mazoController){
-    return $mazoController->crearMazo($request,$response);
+$app->group('/mazos', function ($group) use ($mazoController){
+    $group->post('', [$mazoController, 'crearMazo']);
+    $group->delete('/{mazo:[0-9]+}', [$mazoController, 'eliminarMazo']);
+    $group->put('/{mazo:[0-9]+}', [$mazoController, 'modificarMazo']);
 })->add($authMiddleware);
 
-$app->delete('/mazos/{mazo}', function ($request, $response, $args) use ($mazoController){
-    return $mazoController->eliminarMazo($request,$response,$args);
-})->add($authMiddleware);
+$app->get('/usuarios/{id:[0-9]+}/mazos', [$mazoController, 'listarMazos'])->add($authMiddleware);
 
-$app->put('/mazos/{mazo}', function ($request, $response, $args) use ($mazoController){
-    return $mazoController->modificarMazo($request,$response,$args);
-})->add($authMiddleware);
-
-$app->get('/usuarios/{usuario}/mazos', function ($request, $response, $args) use ($mazoController){
-    return $mazoController->listarMazos($request,$response,$args);
-})->add($authMiddleware);
-
-$app->get('/cartas', function ($request, $response, $args) use ($mazoController){
-    return $mazoController->listarCartas($request,$response,$args);
-})->add($authMiddleware);
+$app->get('/cartas', [$mazoController, 'listarCartas'])->add($authMiddleware);
 
 $app->run();

@@ -46,7 +46,7 @@ class Carta
     {
         $db = DB::getConnection();
         $stmt = $db->prepare("
-            SELECT mc.carta_id AS id, c.nombre
+            SELECT mc.carta_id AS id, c.nombre, c.atributo_id
             FROM mazo_carta mc
             JOIN carta c ON mc.carta_id = c.id
             JOIN partida p ON mc.mazo_id = p.mazo_id
@@ -56,5 +56,19 @@ class Carta
         $stmt->execute();
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerNombreAtributoPorId(int $atributoId): ?array
+    {
+        $db = DB::getConnection();
+        $stmt = $db->prepare("
+            SELECT nombre
+            FROM atributo
+            WHERE id = :atributoId
+        ");
+        $stmt->bindParam(':atributoId', $atributoId);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 }
