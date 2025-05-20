@@ -42,6 +42,12 @@ class JuegoController
             $datos = $request->getParsedBody();
             $idMazo = $datos['mazo_id'] ?? null;
 
+            // **VALIDACIÓN MEJORADA 1:** Un usuario no puede tener más de una partida en curso.
+            if ($this->partidaModel->usuarioTienePartidaEnCurso($idUsuario)) {
+                $response->getBody()->write(json_encode(['error' => 'Ya tienes una partida en curso. Finalízala antes de crear una nueva.']));
+                return $response->withStatus(409)->withHeader('Content-Type', 'application/json'); // 409 Conflict
+            }
+
             if(!$idMazo){
                 $response->getBody()->write(json_encode(['error' => 'Debe proporcionar mazo_id']));
                 return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
@@ -92,7 +98,7 @@ class JuegoController
         try{
             $usuarioId = (int) $args['usuario'];
             $partidaId = (int) $args['partida'];
-            
+    
             $user = $request->getAttribute('user');
             $usuarioLogueadoId = $user['id'];
 
@@ -171,12 +177,28 @@ class JuegoController
                 return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
             }
 
+            // Validar el tipo de los datos 
+            if (!is_int($partidaId) || $partidaId <= 0) {
+                $response->getBody()->write(json_encode(['error' => 'El ID de la partida no es del tipo valido.']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            } elseif (!is_int($cartaJugadaUsuarioId) || $cartaJugadaUsuarioId <= 0) {
+                $response->getBody()->write(json_encode(['error' => 'El ID de la carta jugada no es del tipo valido.']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+
             // Obtener información de la partida
             $partida = $this->partidaModel->obtenerPartidaPorIdYUsuario($partidaId, $userId);
-            if (!$partida || $partida['estado'] !== 'en_curso') {
-                $error = ['error' => 'La partida no existe o no está en curso.'];
-                $response->getBody()->write(json_encode($error));
-                return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+            
+            // Valida que la partida sea del usuario
+            if (!$partida) {
+                $response->getBody()->write(json_encode(['error' => 'La partida no pertenece al usuario.']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            // Valida el estado de la partida obtenida
+            if ($partida['estado'] !== 'en_curso') {
+                $response->getBody()->write(json_encode(['error' => 'La partida no está en curso.']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
             }
 
             $mazoIdUsuario = $partida['mazo_id'];

@@ -41,7 +41,8 @@ class User
     public static function getUserById(int $id): ?array
     {
         $db = DB::getConnection();
-        $stmt = $db->prepare("SELECT id, nombre, usuario FROM usuario WHERE id = :id");
+        //$stmt = $db->prepare("SELECT id, nombre, usuario FROM usuario WHERE id = :id");
+        $stmt = $db->prepare("SELECT * FROM usuario WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);

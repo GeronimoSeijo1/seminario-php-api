@@ -69,13 +69,23 @@ class MazoController
     public function eliminarMazo(Request $request, Response $response, array $args)
     {
         try {
-            if($this->mazoModel->jugado($args['mazo']))
-            {
+            $user = $request->getAttribute('user');
+            $idUsuario = $user['id'];
+            $mazoId = $args['mazo'];
+
+            // Validar que el mazo exista y pertenezca al usuario logueado
+            if (!$this->mazoModel->perteneceAUsuario($mazoId, $idUsuario)) {
+                $response->getBody()->write(json_encode(['error' => 'El mazo no pertenece al usuario logueado']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json'); 
+            }
+
+            // Validar si el mazo ha participado en alguna partida
+            if($this->mazoModel->jugado($args['mazo'])) {
                 $response->getBody()->write(json_encode(['error' => 'Mazo ya utilizado, no se puede eliminar']));
                 return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
             }
 
-            $eliminado = $this->mazoModel->eliminar($args['mazo']);
+            $eliminado = $this->mazoModel->eliminar($mazoId);
             if ($eliminado === true)
             {
                 $response->getBody()->write(json_encode(['exito' => 'Mazo eliminado']));
@@ -106,10 +116,19 @@ class MazoController
     {
         try {
             $data = $request->getParsedBody();
-            $nombre = $data['nombre'];
+            $nombre = $data['nombre'] ?? null;
+
             $mazo_id = $args['mazo'];
+
             $user =$request->getAttribute('user');
             $usuario_id = $user['id'];
+
+            // Validar los datos necesarios
+            if (!$nombre) {
+                $response->getBody()->write(json_encode(['error' => 'Se debe proporcionar el nombre para realizar la modificacion.']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+
             if ($this->mazoModel->perteneceAUsuario($mazo_id,$usuario_id)){
                 if($this->mazoModel->modificarNombre($nombre,$mazo_id))
                 {

@@ -25,4 +25,15 @@ class DB
 
         return self::$connection;
     }
+
+    /**
+     * Permite desreferenciar la conexión PDO.
+     * Esto es útil para permitir que PHP la cierre al final del ciclo de vida de la petición.
+     *
+     * @param \PDO|null $connection La instancia de PDO a establecer (generalmente null para cerrar).
+     */
+    public static function setConnection(?\PDO $connection): void
+    {
+        self::$connection = $connection;
+    }
 }

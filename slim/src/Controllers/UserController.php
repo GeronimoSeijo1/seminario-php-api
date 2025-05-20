@@ -20,9 +20,15 @@ class UserController
         try {
             $data = $request->getParsedBody();
 
-            $nombre = $data['nombre'] ?? '';
-            $usuario = $data['usuario'] ?? '';
-            $password = $data['password'] ?? '';
+            $nombre = $data['nombre'] ?? null;
+            $usuario = $data['usuario'] ?? null;
+            $password = $data['password'] ?? null;
+
+             // Verificar si los parámetros requeridos están presentes
+            if ($nombre === null || $usuario === null || $password === null) {
+                $response->getBody()->write(json_encode(['error' => 'Faltan parámetros requeridos: nombre, usuario o password.']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json'); // 400 Bad Request
+            }
 
             // Primero, verificar si el usuario ya existe
             if ($this->userModel->getUserByUsername($usuario)) {
@@ -54,7 +60,6 @@ class UserController
             error_log("Error de base de datos al registrar usuario: " . $e->getMessage());
             // Devolver una respuesta de error genérica al cliente
             $response->getBody()->write(json_encode(['error' => 'Error interno del servidor al registrar el usuario. Por favor, inténtelo de nuevo más tarde.']));
-
             return $response->withStatus(500)->withHeader('Content-Type', 'application/json'); // 500 Internal Server Error
         } catch (\Exception $e) {
             // Capturar otras excepciones generales
@@ -72,14 +77,36 @@ class UserController
 
             if ($user['id'] !== $requestedId) { // Comparamos el ID del usuario logueado con el ID solicitado
                 $response->getBody()->write(json_encode(['error' => 'No tienes permiso para editar este usuario.']));
-                return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
             }
 
             $data = $request->getParsedBody();
             $nombre = $data['nombre'] ?? null;
             $password = $data['password'] ?? null;
 
+            // Obtener los datos actuales del usuario
+            $usuarioActual = $this->userModel->getUserById($user['id']);
+
             if ($nombre !== null || $password !== null) {
+                // Validar la nueva contraseña si se proporciona
+                if ($password !== null) {
+                    // Validacion longitud y otras
+                    if (strlen($password) < 8 || !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:\'",.<>\/?]).{8,}$/', $password)) {
+                        $response->getBody()->write(json_encode(['error' => 'La nueva clave debe tener al menos 8 caracteres y contener mayúsculas, minúsculas, números y caracteres especiales.']));
+                        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                    }
+                    // Validacion de si la contraseña es la misma
+                    if ($password === $usuarioActual['password']){
+                        $response->getBody()->write(json_encode(['error' => 'La nueva contraseña es igual a la anterior. Por favor, ingrese una contraseña diferente.']));
+                        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                    }
+                }
+
+                if ($nombre !== null && $nombre === $usuarioActual['nombre']){
+                    $response->getBody()->write(json_encode(['error' => 'El nombre ingresado es igual a la anterior. Por favor, ingrese un nombre diferente.']));
+                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                }
+
                 if ($this->userModel->updateProfile($user['id'], $nombre, $password)) { // Usamos el ID del usuario logueado para la actualización
                     $response->getBody()->write(json_encode(['message' => 'Perfil actualizado exitosamente.']));
                     return $response->withStatus(200)->withHeader('Content-Type', 'application/json');

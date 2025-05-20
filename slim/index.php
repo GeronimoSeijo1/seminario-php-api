@@ -6,9 +6,10 @@ use App\Controllers\JuegoController;
 use App\Controllers\UserController;
 use App\Controllers\MazoController;
 use App\Middleware\AuthMiddleware;
+use App\Middleware\ConnectionCloseMiddleware;
 use App\Models\Carta;
 use App\Models\Jugada;
-use App\Models\MazoCarta;
+use App\Models\MazoCarta;   
 use App\Models\Partida;
 use App\Models\User;
 use App\Models\Mazo;
@@ -18,7 +19,7 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/DB.php';
-require __DIR__ . '/src/Controllers/UserController.php';
+//require __DIR__ . '/src/Controllers/UserController.php';
 
 $app = AppFactory::create();
 
@@ -26,7 +27,19 @@ $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 
 // Add error middleware
-$app->addErrorMiddleware(true, true, true);
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+// Manejo de excepción HttpNotFoundException 
+$errorMiddleware->setErrorHandler(
+    \Slim\Exception\HttpNotFoundException::class,
+    function ($request, $exception, $displayErrorDetails, $logErrors, $logErrorDetails) use ($app) {
+        $response = $app->getResponseFactory()->createResponse();
+        $response = $response->withStatus(404);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode(['error' => 'Recurso no encontrado. Por favor, revise la URL.']));
+        return $response;
+    }
+);
 
 $app->get('/', function ($request, $response, $args) {
     $response->getBody()->write("¡Funciono!");
@@ -61,6 +74,8 @@ $app->post('/login', [$authController, 'login']);
 
 $app->get('/estadisticas', [$juegoController, 'obtenerEstadisticasPorUsuario']);
 
+$app->get('/cartas', [$mazoController, 'listarCartas']);
+
 $authMiddleware = AuthMiddleware::initialize();
 
 // Agrupar y proteger las rutas de usuario
@@ -81,6 +96,10 @@ $app->group('/mazos', function ($group) use ($mazoController){
 
 $app->get('/usuarios/{id:[0-9]+}/mazos', [$mazoController, 'listarMazos'])->add($authMiddleware);
 
-$app->get('/cartas', [$mazoController, 'listarCartas'])->add($authMiddleware);
+// Añade el middleware de cierre de conexión al final de la cadena de middlewares
+// Slim detectará automáticamente el método __invoke()
+$app->add(new ConnectionCloseMiddleware());
 
 $app->run();
+
+

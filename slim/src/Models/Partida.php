@@ -7,6 +7,15 @@ use PDO;
 
 class Partida
 {
+    public function usuarioTienePartidaEnCurso(int $idUsuario): bool
+    {
+        $db = DB::getConnection();
+        $stmt = $db->prepare("SELECT COUNT(*) FROM partida WHERE usuario_id = :usuario_id AND estado = 'en_curso'");
+        $stmt->bindParam(':usuario_id', $idUsuario);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
     public function crear($idUsuario, $idMazo): ?int 
     {
         $db = DB::getConnection();
@@ -46,9 +55,10 @@ class Partida
         $stmt->bindParam(':id', $partidaId);
         $stmt->bindParam(':usuario_id', $usuarioId);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null; // Devuelve el array o null si no lo encuentra.
     }
-
+    
     public static function actualizarGanadorPartida(int $partidaId, string $elUsuario): bool
     {
         $db = DB::getConnection();

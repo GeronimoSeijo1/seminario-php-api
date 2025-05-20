@@ -102,18 +102,28 @@ class Mazo
         }
     }
 
-    public static function listaCartas($atributo_id,$nombre){
+    public static function listaCartas(?int $atributo_id, ?string $nombre): array{
         $db = DB::getConnection();
-        $sql = "SELECT nombre, atributo_id, ataque FROM carta WHERE 1=1";
+        $sql = "SELECT
+                c.nombre AS nombre_carta,
+                a.nombre AS nombre_atributo,
+                c.ataque_nombre AS nombre_ataque,
+                c.ataque AS puntos_ataque
+            FROM carta c
+            LEFT JOIN atributo a ON c.atributo_id = a.id
+            WHERE 1=1";
+        //$sql = "SELECT nombre, atributo_id, ataque FROM carta WHERE 1=1";
         $params = [];
 
         if ($atributo_id!==null) {
-            $sql .= " AND atributo_id = :atributo_id";
+            $sql .= " AND c.atributo_id = :atributo_id";
+            //$sql .= " AND atributo_id = :atributo_id";
             $params[':atributo_id'] = $atributo_id;
         }
 
         if ($nombre!==null) {
-            $sql .= " AND nombre LIKE :nombre";
+            //$sql .= " AND nombre LIKE :nombre";
+            $sql .= " AND c.nombre LIKE :nombre";
             $params[':nombre'] = "%$nombre%";
         }
         $stmt = $db->prepare($sql);
@@ -123,18 +133,20 @@ class Mazo
     }
 
     //Verifica si el mazo pertenece al usuario
-    public function perteneceAUsuario($idMazo, $idUsuario): bool{
+    public function perteneceAUsuario(int $idMazo, int $idUsuario): bool
+    {
         $db = DB::getConnection();
         $stmt = $db->prepare("SELECT id FROM mazo WHERE id = :idMazo AND usuario_id = :idUsuario");
-        $stmt->bindParam(':idMazo', $idMazo);
-        $stmt->bindParam(':idUsuario', $idUsuario);
+        $stmt->bindParam(':idMazo', $idMazo, PDO::PARAM_INT);
+        $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
         $stmt->execute();
-        
-        return $stmt->fetchColumn() > 0;  // true si encontró, false si no
+
+        return $stmt->fetchColumn() > 0; // true si encontró una fila (el mazo pertenece), false si no
     }
 
     // Actualiza las cartas del mazo a estado 'en_mano'
-    public function actualizarCartasEnMano($idMazo){
+    public function actualizarCartasEnMano($idMazo)
+    {
         $db = DB::getConnection();
         $stmt = $db->prepare("UPDATE mazo_carta SET estado = 'en_mano' WHERE mazo_id = :idMazo");
         $stmt->bindParam(':idMazo', $idMazo);
