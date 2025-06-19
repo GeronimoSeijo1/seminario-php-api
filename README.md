@@ -1,36 +1,29 @@
-Seminario de PHP, React, y API Rest
-===================================
+# Ejecutar Frontend REACT
+Recomendado: Clonar nuevamente el proyecto para evitar diferencias en la API.
 
-## Configuración inicial
+Advertencia: Los pasos que se describen son para ejecutar por primera vez la parte del frontend.
 
-1. Crear archivo `.env` a partir de `.env.dist`
+## Instalacion y ejecucion
 
-```bash
-cp .env.dist .env
-```
-
-2. Crear volumen para la base de datos
+Una vez que hayan clonado el repositorio, deben usar la terminal para ir a la carpeta donde se encuentra el proyecto de React. Por ejemplo:
 
 ```bash
-docker volume create seminariophp
+cd tu-repositorio/frontend
 ```
 
-donde *seminariophp* es el valor de la variable `DB_VOLUME`
-
-## Iniciar servicios
+## Instalar las dependencias
+Dentro de la carpeta frontend, se deben instalar todas las dependencias del proyecto (incluyendo Axios, Bootstrap y React Router DOM). Para ello, se utiliza el gestor de paquetes npm:
 
 ```bash
-docker compose up -d
+npm install
 ```
+Este comando leerá el archivo package.json y descargará todas las librerías necesarias.
 
-## Terminar servicios
+## Ejecutar el proyecto en modo desarrollo:
+
+Una vez que las dependencias estén instaladas, pueden iniciar el servidor de desarrollo de Vite. Generalmente, el script para esto se llama dev:
 
 ```bash
-docker compose down -v
+npm run dev
 ```
-
-## Eliminar base de datos
-
-```bash
-docker volume rm seminariophp
-```
+Esto iniciará el servidor de desarrollo y les proporcionará una URL (normalmente http://localhost:5173/ o similar) donde podrán ver la aplicación en su navegador.
