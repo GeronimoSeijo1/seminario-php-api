@@ -1,3 +1,6 @@
+/* Import de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
+
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -8,6 +11,7 @@ html, body, #root {
   display: grid;
   min-height: 100dvh;
   grid-template-rows: auto 1fr auto; /* header - main - footer */
+  background-color: #050505;  
 }
 
 /* El main ocupa el alto disponible y centra el contenido */
@@ -16,5 +20,5 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   min-height: 100%; /* para asegurar que se estire */
-  padding: 2rem;
+  padding: 1rem;
 }
