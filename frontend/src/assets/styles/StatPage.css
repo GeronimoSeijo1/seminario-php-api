@@ -1,3 +1,132 @@
-.fixed-row-height {
-  height: 3.5rem;
+/* src/assets/styles/StatPage.css */
+
+/* Fondo general (este archivo ya no define el background del body, lo hace index.css) */
+body {
+  /* Estas propiedades del body han sido movidas a index.css para .layout-grid */
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Asegura que el body ocupe el 100% de la altura del viewport */
+  overflow-y: auto; /* Permite scroll si el contenido es más largo que el viewport */
+}
+
+.leaderboard-card {
+  background-color: rgba(255, 255, 255, 0.10); /* vidrio polarizado */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1.5rem; /* Reducido de 2rem para hacer la tarjeta más compacta*/
+  border-radius: 1rem;
+  color: white; /* Asegura que el color del texto base sea blanco */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-header {
+  font-size: 1.8rem; /* Ligeramente más pequeño para el título*/
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem; /* Reducido de 1.5rem para acercar el título a la tabla */
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 0.5fr 2.5fr repeat(4, 0.5fr) 1fr;
+  align-items: center;
+  padding: 0.6rem 1rem; /* Reducido de 0.8rem para hacer las filas más delgadas*/
+  margin-bottom: 0.4rem; /* Reducido de 0.6rem para acercar las filas */
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.2); /* Aumentada la opacidad para mejor legibilidad */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-height: 40px; /* Reducido de 50px para hacer las filas más pequeñas*/
+  font-size: 0.95rem; /* Ligeramente más pequeña la fuente de las filas */
+  color: white; /* Asegura que el color del texto de la fila sea blanco */
+}
+
+.leaderboard-row > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+.leaderboard-row > div:nth-child(2) {
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: 0.75rem;
+}
+
+.animated-row {
+  transition: transform 0.2s ease;
+}
+
+.animated-row:hover {
+  transform: scale(1.01);
+  background-color: rgba(255, 255, 255, 0.25); /* Un poco más opaco en hover */
+}
+
+.leaderboard-row.header,
+.static-header {
+  background-color: transparent;
+  box-shadow: none;
+  font-weight: bold;
+  margin-bottom: 0.6rem; /* Ajustado para estar más cerca de las filas de datos */
+  transition: none;
+  transform: none;
+  text-align: center;
+  font-size: 0.9rem; /* Un poco más pequeño el encabezado de las columnas */
+}
+
+.leaderboard-row.best {
+  background-color: goldenrod;
+  color: black; /* Texto negro para asegurar legibilidad en el fondo amarillo*/
+  font-weight: 600;
+}
+
+.sortable-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+/* Estilos para la paginación */
+.pagination {
+  margin-top: 1rem; /* Reducido el margen superior de la paginación */
+  margin-bottom: 0; /* Asegurar que no haya margen inferior si no es necesario */
+}
+
+.pagination .page-item .page-link {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 0.5rem;
+  margin: 0 0.2rem; /* Reducido el espacio entre botones de paginación */
+  transition: all 0.3s ease;
+  min-width: 35px; /* Reducido el ancho mínimo para hacerlos más compactos */
+  height: 35px; /* Altura fija para que sean cuadrados o proporcionales */
+  display: flex; /* Usar flexbox para centrar el número */
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  font-size: 0.85rem; /* Fuente más pequeña para los números de página */
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: #D1D0D0;
+  color: white;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: white;
+  font-weight: bold;
+}
+
+/* Para eliminar el foco azul de Bootstrap al hacer click  */
+.pagination .page-item .page-link:focus,
+.pagination .page-item.active .page-link:focus {
+  box-shadow: none;
+  outline: none;
 }

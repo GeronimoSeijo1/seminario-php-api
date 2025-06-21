@@ -1,0 +1,132 @@
+/* src/assets/styles/NavBarComponent.css */
+
+.main-nav .nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+/* Espaciado entre los elementos de la lista (los botones) */
+.main-nav .nav-item {
+  margin-right: 1.2rem; /* <-- Espaciado entre los elementos del NavBar */
+}
+
+.main-nav .nav-item:last-child {
+  margin-right: 0; /* No hay margen a la derecha para el último elemento */
+}
+
+
+/* Estilo para todos los enlaces de navegación (NavLink) */
+.main-nav .pokemon-link {
+  color: rgba(255, 255, 255, 0.8); /* Blanco semi-transparente por defecto */
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 0.8rem; /* Asegura un padding consistente */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Solo color y fondo */
+  border-radius: 0.3rem;
+  white-space: nowrap; /* Impide que el texto se rompa */
+  position: relative; /* CRUCIAL: El padre del ::after debe ser relativo */
+  display: inline-block; /* Asegura que el padding afecte al ancho correctamente */
+  box-sizing: border-box; /* Incluye padding y borde en el ancho/alto */
+}
+
+.main-nav .pokemon-link::after {
+  content: '';
+  position: absolute;
+  left: 50%; /* Centra la línea horizontalmente */
+  bottom: -6px; /* <-- Separación de la línea respecto al enlace */
+  width: 100%; /* La línea abarca todo el ancho del enlace */
+  height: 3px; /* Grosor de la línea */
+  background-color: #CC0000; /* Color rojo de la línea */
+  border-radius: 3px; /* <-- Redondeo de los extremos de la línea */
+
+  /* APARICION INSTANTANEA Y CENTRADA */
+  transform: scaleX(0) translateX(-50%); /* Inicialmente oculta y centrada */
+  transform-origin: center center; /* Define el punto de origen de la transformación */
+  transition: transform 0.05s ease-out; /* Transición muy corta para una aparición casi instantánea */
+}
+
+/* Estado activo y hover para la línea flotante */
+.main-nav .pokemon-link:hover::after,
+.main-nav .pokemon-link.active::after {
+  transform: scaleX(1) translateX(-50%); /* Aparece instantáneamente al escalar a 100% de su ancho y se mantiene centrada */
+}
+
+/* Estilo para el enlace en hover */
+.main-nav .pokemon-link:hover {
+  color: white; /* Blanco sólido al pasar el ratón */
+  background-color: rgba(255, 255, 255, 0.15); /* Fondo ligeramente más visible en hover */
+}
+
+
+/* Estilo específico para el saludo del usuario */
+.main-nav .user-greeting .pokemon-link {
+  color: rgba(255, 255, 255, 0.9);
+  cursor: default;
+  font-weight: normal;
+  padding-bottom: 0.5rem;
+}
+
+.main-nav .user-greeting .pokemon-link:hover {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  transform: none;
+}
+
+/* Asegurarse de que el pseudo-elemento no afecte al user-greeting */
+.main-nav .user-greeting .pokemon-link::after {
+  content: none; /* Elimina la línea para el saludo del usuario */
+}
+
+
+/* ESTILOS PARA EL BOTÓN "ACCEDER" (LOGIN) */
+.main-nav .access-button {
+  /* Sobrescribe estilos de Bootstrap y aplica los tuyos */
+  background-color: #CC0000; /* Rojo principal, sobrescribe btn-danger */
+  color: #111111; /* Letras negras */
+  border: 1px solid #CC0000; /* Borde rojo */
+  letter-spacing: 0.05em;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+  font-weight: bold; /* Asegura negrita */
+  padding: 0.6rem 1.2rem; /* Mantener padding personalizado */
+  border-radius: 0.5rem; /* Mantener borde redondeado personalizado */
+}
+
+.main-nav .access-button:hover {
+  background-color: transparent; /* Fondo transparente */
+  color: #CC0000; /* Letras rojas */
+  border-color: #CC0000; /* Borde rojo */
+}
+
+/* IMPORTANTE: Desactivar la línea flotante para el botón de ACCEDER */
+.main-nav .access-button::after {
+  content: none; /* ELIMINA LA LÍNEA PARA EL BOTÓN ACCEDER */
+}
+
+
+/* Estilo para el botón de Logout */
+.logout-button {
+  background-color: rgba(204, 0, 0, 0.6);
+  color: #FFFFFF;
+  border: 1px solid rgba(204, 0, 0, 0.8);
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logout-button:hover {
+  background-color: #CC0000;
+  border-color: #FF0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
