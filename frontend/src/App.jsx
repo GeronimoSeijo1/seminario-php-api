@@ -3,8 +3,7 @@ import StatPage from './pages/stat/statPage';
 import RegistroPage from './pages/registro/RegistroPage';
 import LoginPage from './pages/login/LoginPage';
 import EditarUsuarioPage from './pages/editar/EditarUsuarioPage.jsx';
-
-// (más adelante se agregara RegistroPage, LoginPage, etc.)
+import JugarPage from './pages/play/JugarPage';
 
 function App() {
   return (
@@ -13,6 +12,7 @@ function App() {
       <Route path="/registro" element={<RegistroPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/editar" element={<EditarUsuarioPage />} />
+      <Route path="/jugar" element={<JugarPage />} />
     </Routes>
   );
 }
