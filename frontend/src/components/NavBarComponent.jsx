@@ -3,8 +3,8 @@ import { Link, NavLink } from 'react-router-dom'; // Asegúrate de importar NavL
 import '../assets/styles/NavBarComponent.css'; 
 
 function NavBarComponent() {
-  const token = 'fake-token'; // localStorage.getItem('token');
-  const nombre = 'Ash de Prueba'; // localStorage.getItem('nombre');
+  const token = localStorage.getItem('token');
+  const nombre = localStorage.getItem('usuario');
 
 
   return (
