@@ -1,7 +1,7 @@
 import { api } from '../api/api';
 
 export const getStats = () => api.get('/estadisticas');
-export const getMazos = (id) => api.get('/usuarios/${id:[0-9]+}/mazos', {
+export const getMazos = (id,token) => api.get(`/usuarios/${id}/mazos`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -20,7 +20,7 @@ export const editUser = (id, datos, token) => {
 }
 
 export const getCartas = (filtros = {}) => api.get('/cartas', { params: filtros });
-export const addMazo = (datos) => api.post('/mazos',datos, {
+export const addMazo = (datos,token) => api.post('/mazos',datos, {
     headers: {
       Authorization: `Bearer ${token}`
     }

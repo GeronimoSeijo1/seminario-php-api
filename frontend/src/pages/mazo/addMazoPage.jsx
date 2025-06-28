@@ -28,6 +28,9 @@ function AddMazoPage() {
       });
   }, [filtroNombre, filtroAtributo]);
 
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("id");
+
   const alternarCarta = (id) => {
     setSeleccionadas(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
@@ -43,6 +46,14 @@ function AddMazoPage() {
     setError('');
     setMazoGuardado(false);
 
+    const response = await getMazos(userId, token);
+    const mazos = response.data["lista de mazos del usuario logueado"] || [];
+
+    if (mazos.length >= 3) {
+      setError('Ya tienes el máximo de 3 mazos.');
+      return;
+    }
+
     if (nombre.length > 20) {
       setError('El nombre del mazo no puede superar los 20 caracteres.');
       return;
@@ -53,7 +64,7 @@ function AddMazoPage() {
     }
 
     try {
-      const res = await addMazo({ nombre, carta_id: seleccionadas });
+      const res = await addMazo({ nombre, carta_id: seleccionadas},token);
       if (res.data.mazo_id) {
         setMazoGuardado(true);
         setNombre('');
@@ -67,8 +78,10 @@ function AddMazoPage() {
 
   return (
     <Layout>
-    <div className="mazo-card">  
+    <div className="mazo-card w-100" style={{ maxWidth: '550px' }}>  
       <div className="container mt-4">
+        <div className="row justify-content-center">
+        <div className="col-30 col-lg-28">
         <h2>Nuevo mazo</h2>
 
         <div className="form-group mb-2">
@@ -118,19 +131,21 @@ function AddMazoPage() {
         <div className="cartas-grid">
           {cartas.map((carta, index) => (
             <div key={index} className="carta-item">
-              <label className="d-flex align-items-center">
-                <input
-                  type="checkbox"
-                  checked={seleccionadas.includes(index + 1)} // o carta.id si lo tenés
-                  onChange={() => alternarCarta(index + 1)} // o carta.id
-                  className="me-2"
-                />
-                <div>
-                  <strong>{carta.nombre_carta}</strong><br />
-                  Atributo: {carta.nombre_atributo}<br />
-                  {carta.nombre_ataque}: {carta.puntos_ataque}
-                </div>
-              </label>
+              <input
+                type="checkbox"
+                checked={seleccionadas.includes(index + 1)} // o carta.id si lo tenés
+                onChange={() => alternarCarta(index + 1)}
+                className="carta-checkbox"
+              />
+
+              <div className="carta-nombre">
+                <strong>{carta.nombre_carta}</strong>
+              </div>
+
+              <div className="carta-info text-end">
+                <div>Atributo: {carta.nombre_atributo}</div>
+                <div>{carta.nombre_ataque}: {carta.puntos_ataque}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -141,6 +156,8 @@ function AddMazoPage() {
         <button className="btn btn-primary mt-3" onClick={guardarMazo}>
           Guardar Mazo
         </button>
+        </div>
+  </div>
       </div>
       </div>
     </Layout>

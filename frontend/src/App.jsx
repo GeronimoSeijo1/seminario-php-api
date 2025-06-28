@@ -11,7 +11,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<StatPage />} />
-      <Route path="/addMazoPage" element={<AddMazoPage />} />
+      <Route path="/addMazo" element={<AddMazoPage />} />
       <Route path="/registro" element={<RegistroPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/editar" element={<EditarUsuarioPage />} />

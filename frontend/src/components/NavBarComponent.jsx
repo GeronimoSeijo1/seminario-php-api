@@ -43,6 +43,9 @@ function NavBarComponent() {
               <NavLink to="/mis-mazos" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Mis Mazos</NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/addMazo" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Agregar Mazo</NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/editar" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Editar usuario</NavLink>
             </li>
             <li className="nav-item">
