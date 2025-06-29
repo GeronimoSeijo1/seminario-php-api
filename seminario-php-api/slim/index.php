@@ -87,6 +87,7 @@ $app->group('/usuarios', function ($group) use ($userController) {
 $app->post('/partidas', [$juegoController, 'crearPartida'])->add($authMiddleware);
 $app->post('/jugadas', [$juegoController, 'realizarJugada'])->add($authMiddleware);
 $app->get('/usuarios/{usuario}/partidas/{partida}/cartas', [$juegoController, 'obtenerCartasEnMano'])->add($authMiddleware);
+$app->get('/partidas/{partidaId}/cartas/servidor', [$juegoController, 'obtenerCartasEnManoServidor'])->add($authMiddleware);
 
 $app->group('/mazos', function ($group) use ($mazoController){
     $group->post('', [$mazoController, 'crearMazo']);

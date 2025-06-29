@@ -19,6 +19,6 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100%; /* para asegurar que se estire */
-  padding: 1rem;
+  min-height: 100%; /* para asegurar que se estire 
+  padding: 1rem;*/
 }

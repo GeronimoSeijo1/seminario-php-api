@@ -25,7 +25,7 @@ export const iniciarPartida = (idMazo, token) => {
 
 export const realizarJugada = (idPartida, idCartaJugada, token) => {
     return api.post('/jugadas', {
-        id_partida: idPartida,
+        id_partida: Number(idPartida),
         carta_jugada: idCartaJugada, 
     }, {
         headers: {
@@ -49,9 +49,9 @@ export const obtenerCartasEnManoUsuario = (idUsuario, partidaId, token) => {
   });
 };
 
-// Función para obtener las cartas en mano del servidor para una partida (o su cuenta)
-export const obtenerCartasEnManoServidor = (servidorId, partidaId, token) => {
-    return api.get(`/usuarios/${servidorId}/partidas/${partidaId}/cartas`, {
+// NUEVO ENDPOINT PARA DEVOLVER CARTAS DEL SERVIDOR
+export const obtenerCartasEnManoServidor = (partidaId, token) => {
+  return api.get(`/partidas/${partidaId}/cartas/servidor`, { 
     headers: {
       'Authorization': `Bearer ${token}`
     }

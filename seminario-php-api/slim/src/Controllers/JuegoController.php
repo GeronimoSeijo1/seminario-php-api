@@ -93,6 +93,48 @@ class JuegoController
         
     }
 
+    public function obtenerCartasEnManoServidor(Request $request, Response $response, array $args) {
+        try {
+            $partidaId = (int) $args['partidaId'];
+            $usuarioLogueadoId = $request->getAttribute('user')['id']; // Todavía verificamos que haya un usuario loggeado
+                
+            $servidorId = 1; 
+
+            //Valida que la partida pertenezca al usuario
+            if (!$this->partidaModel->perteneceAUsuario($partidaId, $usuarioLogueadoId)) {
+                $response->getBody()->write(json_encode(['error' => 'La partida no pertenece al usuario']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            // Obtener las cartas 'en_mano' del servidor para esta partida
+            $cartasServidor = $this->cartaModel->obtenerCartasServidorDeLaPartida($partidaId);
+            $cartasConAtributoNombre = [];
+            foreach ($cartasServidor as $carta) {
+                $atributo = $this->cartaModel->obtenerNombreAtributoPorId($carta['atributo_id']);
+                $cartasConAtributoNombre[] = [
+                    'id' => $carta['id'],
+                    'nombre' => $carta['nombre'],
+                    'atributo' => $atributo['nombre'] ?? null, // Incluir atributo para el reverso
+                    'nombre_ataque' => $carta['ataque_nombre'] ?? null,
+                    'puntos_ataque' => $carta['ataque'] ?? null,
+                    // 'imageUrl' => $carta['url_imagen_carta'] ?? null
+                ];
+            }
+
+            $response->getBody()->write(json_encode(['cartas_servidor' => $cartasConAtributoNombre]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+
+        } catch (\PDOException $e) {
+            error_log("Error de base de datos al obtener cartas del servidor: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor (BD). Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            error_log("Error general al obtener cartas del servidor: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor. Por favor, inténtelo de nuevo más tarde.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        }
+    }
+
     public function obtenerCartasEnMano(Request $request, Response $response, $args){
 
         try{
@@ -121,8 +163,12 @@ class JuegoController
             foreach ($cartas as $carta) {
                 $atributo = $this->cartaModel->obtenerNombreAtributoPorId($carta['atributo_id']);
                 $cartasConAtributoNombre[] = [
-                    'nombre_carta' => $carta['nombre'],
-                    'nombre_atributo' => $atributo['nombre'] ?? null
+                    'id' => $carta['id'], 
+                    'nombre' => $carta['nombre'], 
+                    'atributo' => $atributo['nombre'] ?? null,
+                    'nombre_ataque' => $carta['ataque_nombre'] ?? null, 
+                    'puntos_ataque' => $carta['ataque'] ?? null, 
+                    //'imageUrl' => $carta['url_imagen_carta'] ?? null 
                 ];
             }
 
