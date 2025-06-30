@@ -20,7 +20,7 @@ export const getUserMazos = (userId, token) => {
       Authorization: `Bearer ${token}`
     }
   });
-});
+};
 
 export const getCartasDeMazo = (userId, mazoId, token) => {
   return api.get(`/usuarios/${userId}/mazos/${mazoId}/cartas`, {
