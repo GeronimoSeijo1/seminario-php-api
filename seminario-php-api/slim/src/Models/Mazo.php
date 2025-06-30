@@ -152,4 +152,16 @@ class Mazo
         $stmt->bindParam(':idMazo', $idMazo);
         $stmt->execute();
     }
+
+
+    public static function listaCartasMazo(int $mazo_id){
+        $db = DB::getConnection();
+        $stmt = $db->prepare("SELECT c.id, c.nombre, c.atributo_id, c.ataque 
+                                FROM mazo_carta mc
+                                JOIN carta c ON mc.carta_id = c.id
+                                WHERE mc.mazo_id = :mazo_id
+                                ");
+        $stmt->execute([':mazo_id' => $mazo_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

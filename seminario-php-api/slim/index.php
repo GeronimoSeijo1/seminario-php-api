@@ -96,6 +96,8 @@ $app->group('/mazos', function ($group) use ($mazoController){
 })->add($authMiddleware);
 
 $app->get('/usuarios/{id:[0-9]+}/mazos', [$mazoController, 'listarMazos'])->add($authMiddleware);
+//Agregado para el front
+$app->get('/usuarios/{usuarioId:[0-9]+}/mazos/{mazoId:[0-9]+}/cartas', [$mazoController, 'listarCartasDeUnMazo'])->add($authMiddleware);
 
 // Añade el middleware de cierre de conexión al final de la cadena de middlewares
 // Slim detectará automáticamente el método __invoke()

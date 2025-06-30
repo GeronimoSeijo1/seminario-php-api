@@ -3,6 +3,7 @@ import StatPage from './pages/stat/statPage';
 import RegistroPage from './pages/registro/RegistroPage';
 import LoginPage from './pages/login/LoginPage';
 import EditarUsuarioPage from './pages/editar/EditarUsuarioPage.jsx';
+import MisMazosPage from './pages/mazos/MisMazosPage';
 import JugarPage from './pages/Jugar/JugarPage';
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
       <Route path="/registro" element={<RegistroPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/editar" element={<EditarUsuarioPage />} />
-       <Route path="/jugar/:idPartida" element={<JugarPage />} />
+      <Route path="/mis-mazos" element={<MisMazosPage />} />
+      <Route path="/jugar/:idPartida" element={<JugarPage />} />
     </Routes>
   );
 }
