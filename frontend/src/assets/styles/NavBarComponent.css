@@ -82,7 +82,7 @@
 
 
 /* ESTILOS PARA EL BOTÓN "ACCEDER" (LOGIN) */
-.main-nav .access-button {
+.main-nav .btn.access-button {
   /* Sobrescribe estilos de Bootstrap y aplica los tuyos */
   background-color: #CC0000; /* Rojo principal, sobrescribe btn-danger */
   color: #111111; /* Letras negras */
@@ -107,26 +107,32 @@
 
 
 /* Estilo para el botón de Logout */
-.logout-button {
-  background-color: rgba(204, 0, 0, 0.6);
-  color: #FFFFFF;
-  border: 1px solid rgba(204, 0, 0, 0.8);
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
+/* Aumentamos la especificidad añadiendo .main-nav .nav-item al selector
+   para asegurarnos de que estos estilos sobrescriban los de Bootstrap. */
+.main-nav .nav-item .logout-button {
+  /* Hacemos el botón claramente visible por defecto */
+  background-color: #CC0000; /* Fondo rojo sólido para que sea bien visible */
+  color: #FFFFFF; /* Color del icono blanco */
+  border: 1px solid #CC0000; /* Borde rojo sólido */
+  padding: 0.6rem 1rem; /* Padding consistente con los otros botones de contorno */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  display: flex; /* Para centrar el icono */
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem; /* Tamaño del icono */
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; /* Transición suave para todos los cambios */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra sutil para darle profundidad */
+  /* Eliminamos width y height fijos para que se ajuste al padding y contenido */
 }
 
-.logout-button:hover {
-  background-color: #CC0000;
-  border-color: #FF0000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.main-nav .nav-item .logout-button:hover {
+  background-color: #bd2130; /* Rojo más oscuro al pasar el ratón */
+  color: #FFFFFF; /* Icono blanco puro */
+  border-color: #bd2130; /* Borde rojo más oscuro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en hover */
 }
 
-.logout-button:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+.main-nav .nav-item .logout-button:active {
+  transform: scale(0.98); /* Ligero encogimiento al hacer clic */
 }

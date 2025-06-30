@@ -46,7 +46,7 @@ class Carta
     {
         $db = DB::getConnection();
         $stmt = $db->prepare("
-            SELECT mc.carta_id AS id, c.nombre, c.atributo_id
+            SELECT mc.carta_id AS id, c.nombre, c.atributo_id, c.ataque, c.ataque_nombre
             FROM mazo_carta mc
             JOIN carta c ON mc.carta_id = c.id
             JOIN partida p ON mc.mazo_id = p.mazo_id
@@ -54,7 +54,27 @@ class Carta
         ");
         $stmt->bindParam(':idPartida', $idPartida);
         $stmt->execute();
-    
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerCartasServidorDeLaPartida($idPartida): array
+    {
+        $db = DB::getConnection();
+        $stmt = $db->prepare("
+            SELECT 
+                mc.carta_id AS id, c.nombre, c.atributo_id, c.ataque_nombre, c.ataque
+            FROM 
+                mazo_carta mc
+            JOIN 
+                carta c ON mc.carta_id = c.id
+            WHERE 
+                mc.mazo_id = 1 AND mc.estado = 'en_mano'
+            AND EXISTS (SELECT 1 FROM partida p WHERE p.id = :idPartida AND p.estado = 'en_curso');
+        ");
+        $stmt->bindParam(':idPartida', $idPartida, PDO::PARAM_INT);
+        $stmt->execute();
+            
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
