@@ -8,17 +8,6 @@ function EditarUsuarioPage() {
     const [errores, setErrores] = useState([]);
     const navigate = useNavigate(); // Inicializamos useNavigate
 
-    // Puedes usar useEffect para cargar datos iniciales del usuario si es necesario
-    // Por ejemplo, para pre-rellenar el campo de nombre.
-    // useEffect(() => {
-    //     const storedUserName = localStorage.getItem("usuario");
-    //     if (storedUserName) {
-    //         // Aquí podrías establecer el valor inicial del input de nombre
-    //         // Necesitarías un estado para el nombre del input y un ref o controlarlo
-    //         // de forma controlada si quieres que se muestre el nombre actual.
-    //     }
-    // }, []);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const nombre = e.target[0].value.trim();

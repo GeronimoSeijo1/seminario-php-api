@@ -18,7 +18,7 @@ export const editUser = (id, datos, token) => {
       Authorization: `Bearer ${token}`
     }
   });
-});
+};
 
 export const getCartas = (filtros = {}) => api.get('/cartas', { params: filtros });
 

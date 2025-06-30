@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../layout/Layout.jsx';
 import { getCartas, getMazos, addMazo } from '../../services/apiServices.js';
-import '../../assets/styles/AddMazoPage.css';
+import '../../assets/styles/addMazoPage.css';
 
 function AddMazoPage() {
   const [nombre, setNombre] = useState('');
