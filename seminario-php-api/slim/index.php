@@ -87,6 +87,7 @@ $app->group('/usuarios', function ($group) use ($userController) {
 $app->post('/partidas', [$juegoController, 'crearPartida'])->add($authMiddleware);
 $app->post('/jugadas', [$juegoController, 'realizarJugada'])->add($authMiddleware);
 $app->get('/usuarios/{usuario}/partidas/{partida}/cartas', [$juegoController, 'obtenerCartasEnMano'])->add($authMiddleware);
+$app->get('/partidas/{partidaId}/cartas/servidor', [$juegoController, 'obtenerCartasEnManoServidor'])->add($authMiddleware);
 
 $app->group('/mazos', function ($group) use ($mazoController){
     $group->post('', [$mazoController, 'crearMazo']);
@@ -95,6 +96,8 @@ $app->group('/mazos', function ($group) use ($mazoController){
 })->add($authMiddleware);
 
 $app->get('/usuarios/{id:[0-9]+}/mazos', [$mazoController, 'listarMazos'])->add($authMiddleware);
+//Agregado para el front
+$app->get('/usuarios/{usuarioId:[0-9]+}/mazos/{mazoId:[0-9]+}/cartas', [$mazoController, 'listarCartasDeUnMazo'])->add($authMiddleware);
 
 // Añade el middleware de cierre de conexión al final de la cadena de middlewares
 // Slim detectará automáticamente el método __invoke()
