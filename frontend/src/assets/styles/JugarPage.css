@@ -1,23 +1,11 @@
-/* frontend/src/assets/styles/GamePage.css */
-
-/* Variables de color para consistencia */
-:root {
-  --primary-color: #6a0dad; /* Púrpura oscuro (base de tu reverso) */
-  --secondary-color: #a7f3d0; /* Verde claro (para contrastes y resaltado) */
-  --dark-background: #1a1a2e; /* Fondo muy oscuro */
-  --light-text: #e0f2f7; /* Texto claro */
-  --accent-blue: #007bff; /* Azul para ciertos elementos si se necesita */
-  --border-color-subtle: rgba(0, 0, 0, 0.4); /* Nuevo color de borde para las zonas */
-}
-
 .game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 40px));
+  /*min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 40px));*/
   /* Ruta de la imagen de fondo - Asume que 'tablero.jpg' está en /public/images/ */
-  background-image: url('../images/tablero.jpg'); /* ¡IMPORTANTE: Mueve tu imagen 'tablero.jpg' a la carpeta 'public/images/'! */
+  background-image: url('../images/tablero1.png'); /* ¡IMPORTANTE: Mueve tu imagen 'tablero.jpg' a la carpeta 'public/images/'! */
   background-size: cover;
   background-position: center;
   /*background-attachment: fixed;  Hace que el fondo sea estático al hacer scroll */
@@ -28,49 +16,32 @@
   overflow-x: hidden; /* Evita scroll horizontal en móviles */
 }
 
-/* El h2 ya no estará presente, pero dejo el estilo por si acaso para otros títulos */
-h2 { 
-  color: var(--secondary-color);
-  margin-bottom: 15px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
-  font-family: 'Press Start 2P', cursive; /* Fuente pixelada o gaming, si la tienes */
-  font-size: 2em;
-  text-transform: uppercase;
-}
-
 .instruction-message {
-  color: var(--light-text);
+  color: white;
   font-size: 1.1em;
+  font-weight: 600;
   margin-top: -10px;
   margin-bottom: 25px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: transparent;
   padding: 8px 15px;
   border-radius: 5px;
-  border: 1px solid rgba(var(--secondary-color), 0.3);
 }
 
 /* ZONAS de cartas (mano y servidor) */
 .card-zone {
-  background-color: rgba(0, 0, 0, 0.1); /* Fondo muy transparente */
-  backdrop-filter: blur(2px); /* Menos desenfoque */
-  -webkit-backdrop-filter: blur(2px);
   border-radius: 1rem;
-  box-shadow: none; /* Eliminar sombra */
-  border: 1px solid var(--border-color-subtle); /* Borde más discreto */
+  border: 5px solid rgba(0, 0, 0, 1); /* Borde más discreto */
   padding: 0.8rem; /* Menos padding */
   width: 100%;
   max-width: 960px; 
   margin: 1rem auto; 
-  color: var(--light-text);
   text-align: center;
 }
 
 .section-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--secondary-color); 
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+  color: black;
   margin-bottom: 0.8rem; /* Menos margen inferior para acercar a las cartas */
   text-transform: uppercase;
 }
@@ -97,11 +68,6 @@ h2 {
   margin: 20px 0;
   width: 100%;
   max-width: 1000px; 
-  /*background-color: rgba(0, 0, 0, 0.5); 
-  border-radius: 15px; 
-  padding: 25px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); 
-  border: 2px solid var(--border-color-subtle);*/ 
 }
 
 .played-cards {
@@ -118,38 +84,34 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*color: var(--light-text);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);*/
 }
 
 .player-played-card h4,
 .server-played-card h4 {
+  color:#050505;
   margin-bottom: 15px;
   font-size: 1.3em;
-  color: var(--secondary-color);
 }
 
 .waiting-message {
-  color: var(--secondary-color);
+  color: white;
   font-size: 1.4em;
   text-align: center;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 .round-result {
-  background-color: rgba(50, 0, 70, 0.9);
+  background-color: #050505;
   padding: 20px 30px;
   border-radius: 10px;
-  color: var(--light-text);
+  color: white;
   text-align: center;
   font-size: 1.3em;
-  margin-top: 30px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(var(--secondary-color), 0.6);
+  border: 1px solid rgba(#050505, 0.6);
 }
 
 .round-result p strong {
-    color: var(--secondary-color);
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 /* Overlay para el resultado final de la partida */
@@ -169,27 +131,27 @@ h2 {
 }
 
 .game-result-modal {
-  background-color: var(--primary-color); 
+  background-color: #CC0000; 
   padding: 40px;
   border-radius: 15px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
-  color: var(--light-text);
-  border: 2px solid var(--secondary-color);
+  color: white;
+  border: 2px solid #050505;
   max-width: 90%; 
 }
 
 .game-result-modal h3 {
   margin-bottom: 20px;
-  color: var(--secondary-color);
-  font-size: 2em;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #050505;
+  font-weight: bold;  
+  font-size: 2.5em;
 }
 
 .game-result-modal p {
   font-size: 1.5em;
   margin-bottom: 25px;
-  color: var(--light-text);
+  color: white;
 }
 
 .error-message {
@@ -207,8 +169,8 @@ h2 {
 /* Estilo para los botones dentro del modal de resultados o errores */
 .game-result-modal button,
 .game-container .btn {
-  background-color: var(--secondary-color); 
-  color: var(--primary-color); 
+  background-color: #050505; 
+  color: white; 
   border: none;
   padding: 12px 25px;
   border-radius: 8px;
@@ -216,14 +178,13 @@ h2 {
   font-weight: bold;
   font-size: 1.1em;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 .game-result-modal button:hover,
 .game-container .btn:hover {
-  background-color: #7ee8b0; 
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+  background-color: white;
+  color: #CC0000;
+  border: white ;
 }
 
 /* Responsive adjustments */
@@ -247,7 +208,7 @@ h2 {
   }
   .game-board {
     padding: 20px;
-    gap: 20px;
+    gap: 10 px;
   }
   .played-cards {
     gap: 30px;

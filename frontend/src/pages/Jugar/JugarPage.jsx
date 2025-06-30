@@ -1,5 +1,5 @@
 // frontend/src/pages/jugar/JugarPage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../../layout/Layout'; 
 import CardComponent from '../../components/CardComponent'; 
@@ -15,13 +15,11 @@ function JugarPage() {
   // Estados para gestionar la UI del juego
   const [cartasEnManoUsuario, setCartasEnManoUsuario] = useState([]);
   const [cartasServidorEnMano, setCartasServidorEnMano] = useState([]); // Este estado contendrá los detalles completos de las cartas del servidor en mano
-  const [cartasServidorRestantes, setCartasServidorRestantes] = useState(5); 
   const [cartaJugadaUsuario, setCartaJugadaUsuario] = useState(null);
   const [cartaJugadaServidor, setCartaJugadaServidor] = useState(null); // Aquí se guardará la carta completa del servidor jugada
   const [mensajeJugada, setMensajeJugada] = useState(''); 
-  const [puntosTotalesJugada, setPuntosTotalesJugada] = useState({ jugador: 0, servidor: 0 });
   const [partidaFinalizada, setPartidaFinalizada] = useState(false);
-  const [ganadorPartida, setGanadorPartida] = useState(''); 
+  const [resultadoPartida, setResultadoPartida] = useState(''); 
   const [error, setError] = useState(''); 
   const [isLoading, setIsLoading] = useState(true); 
   const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false); 
@@ -119,13 +117,6 @@ function JugarPage() {
     isLoading 
   ]);
 
-  // Sincronizar cartasServidorRestantes con la longitud de cartasServidorEnMano
-  useEffect(() => {
-    console.log("JugarPage useEffect [cartasServidorEnMano]: Actualizando cartasServidorRestantes a:", cartasServidorEnMano.length);
-    setCartasServidorRestantes(cartasServidorEnMano.length); 
-  }, [cartasServidorEnMano]);
-
-
   // Efecto para manejar el intento de abandonar la partida
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -155,7 +146,6 @@ function JugarPage() {
     setError(''); 
     setMensajeJugada('');
     setCartaJugadaServidor(null); // Limpiar la carta jugada del servidor antes de la nueva ronda
-    setPuntosTotalesJugada({ jugador: 0, servidor: 0 });
 
     const token = getToken();
     if (!token || !userData) {
@@ -179,11 +169,8 @@ function JugarPage() {
       const response = await realizarJugada(idPartida, cardId, token);
       const {
         carta_servidor: serverCardIdFromBackend, // Renombramos a 'serverCardIdFromBackend' para mayor claridad
-        puntos_fuerza_jugador: playerPoints, 
-        puntos_fuerza_servidor: serverPoints, 
-        resultado_jugada: resultadoJugada, 
-        ganador_partida: ganadorPartidaData, 
-        partida_finalizada: isPartidaFinalizada
+        resultado_jugada: resultadoJugada,
+        ganador_juego: isPartidaFinalizada
       } = response.data;
 
       console.log("handlePlayCard: Jugada exitosa. Respuesta de la API:", response.data);
@@ -214,19 +201,20 @@ function JugarPage() {
         setError('No se pudieron obtener los detalles completos de la carta del servidor jugada.');
       }
       // ***************************************************************************************
-
-
-      setPuntosTotalesJugada({ jugador: playerPoints, servidor: serverPoints });
       setMensajeJugada(resultadoJugada);
-      
-      // cartasServidorRestantes se actualiza automáticamente con el useEffect que monitorea cartasServidorEnMano
 
       setCartasEnManoUsuario(prevCartas => prevCartas.filter(c => c.id !== cardId));
 
-      if (isPartidaFinalizada) {
+      if (isPartidaFinalizada !== 'Partida en curso') {
         setPartidaFinalizada(true);
-        setGanadorPartida(ganadorPartidaData);
-        console.log("handlePlayCard: Partida finalizada. Ganador:", ganadorPartidaData);
+        if (isPartidaFinalizada === 'gano') { 
+          setResultadoPartida('GANADA');
+        } else if (isPartidaFinalizada === 'perdio'){
+          setResultadoPartida('PERDIDA');
+        } else {
+          setResultadoPartida('EMPATE');
+        }
+        console.log("handlePlayCard: Partida finalizada. Ganador:", isPartidaFinalizada);
       }
 
     } catch (err) {
@@ -271,21 +259,19 @@ function JugarPage() {
   return (
     <Layout>
       <div className="game-container">
-        <p className="instruction-message">Haz doble clic en una carta de tu mano para jugarla.</p>
-        
         {partidaFinalizada && (
           <div className="game-result-overlay">
             <div className="game-result-modal">
-              <h3>¡Partida Finalizada!</h3>
-              <p>{ganadorPartida}</p>
-              <button className="btn btn-success" onClick={handlePlayAgain}>Jugar Otra Vez</button>
+              <h3>¡{resultadoPartida}!</h3>
+              <button className="btn m-1" onClick={handlePlayAgain}>JUGAR OTRA VEZ</button>
+              <button className="btn m-1" onClick={handlePlayAgain}>VOLVER A INICIO</button>
             </div>
           </div>
         )}
 
         {/* Zona de cartas del servidor (mano) */}
         <div className="card-zone server-hand-area"> 
-          <h3 className="section-title">Cartas del Servidor ({cartasServidorEnMano.length})</h3> 
+          <h3 className="section-title">Cartas del Servidor</h3> 
           <div className="server-cards-placeholder">
             {Array.isArray(cartasServidorEnMano) && cartasServidorEnMano.length > 0 ? (
               cartasServidorEnMano.map((card) => ( 
@@ -310,7 +296,7 @@ function JugarPage() {
                 <CardComponent card={cartaJugadaUsuario} isFlipped={false} /> {/* Tu carta siempre se muestra de frente */}
               </div>
               <div className="server-played-card">
-                <h4>Carta del Servidor</h4>
+                <h4>Servidor</h4>
                 <CardComponent card={cartaJugadaServidor} isFlipped={false} /> {/* La carta jugada del servidor ahora se muestra de frente */}
               </div>
             </div>
@@ -320,15 +306,15 @@ function JugarPage() {
 
           {mensajeJugada && cartaJugadaUsuario && cartaJugadaServidor && (
             <div className="round-result">
-              <p>Resultado de la Jugada: <strong>{mensajeJugada}</strong></p>
-              <p>Puntos: Tú ({puntosTotalesJugada.jugador}) vs Servidor ({puntosTotalesJugada.servidor})</p>
+              <p>Resultado de la Jugada</p>
+              <p><strong>{mensajeJugada}</strong></p>
             </div>
           )}
         </div>
 
         {/* Zona de cartas del jugador (mano) */}
         <div className="card-zone player-hand-area"> 
-          <h3 className="section-title">Tu Mano ({cartasEnManoUsuario.length})</h3>
+          <h3 className="section-title">Tu Mano</h3>
           <div className="player-cards">
             {Array.isArray(cartasEnManoUsuario) && cartasEnManoUsuario.length > 0 ? (
               cartasEnManoUsuario.map((card) => ( 

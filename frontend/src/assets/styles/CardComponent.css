@@ -10,7 +10,7 @@
 .poke-card { /* Clase renombrada */
   width: 160px; /* Aumenta el ancho de la carta para más espacio */
   height: 220px; /* Aumenta el alto de la carta para más espacio */
-  border: 4px solid var(--secondary-color); /* Borde más pronunciado y color de acento */
+  border: 4px solid #050505;/*var(--secondary-color); /* Borde más pronunciado y color de acento */
   border-radius: 12px; /* Esquinas más redondeadas */
   perspective: 1000px;
   cursor: pointer;
@@ -53,8 +53,8 @@
 }
 
 .poke-card-back { /* Clase renombrada */
-  background: radial-gradient(circle at center, #6a0dad 0%, #4a0072 100%);
-  border: 2px solid #fff;
+  background: radial-gradient(circle at center, #c91919 0%, #CC0000 100%);
+  border: 2px solid #050505;
   transform: rotateY(180deg);
   display: flex;
   justify-content: center;
@@ -63,13 +63,6 @@
   font-weight: bold;
   font-size: 2em;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-.poke-card-back-symbol { /* Clase renombrada */
-    font-size: 3em;
-    color: var(--secondary-color);
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
-    opacity: 0.8;
 }
 
 /* Clases para el efecto de volteo de la carta (renombradas) */
