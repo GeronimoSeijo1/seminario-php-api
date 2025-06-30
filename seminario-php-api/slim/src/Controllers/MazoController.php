@@ -172,8 +172,8 @@ class MazoController
                 $lista = $this->mazoModel->listaMazos($user['id']);
                 if(empty($lista))
                 {
-                    $response->getBody()->write(json_encode(['error' => 'El usuario no tiene mazos']));
-                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                    $response->getBody()->write(json_encode(['lista de mazos del usuario logueado vacia' => $lista]));
+                    return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
                 }
                 else
                 {

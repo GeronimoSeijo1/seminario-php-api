@@ -56,64 +56,66 @@ function StatPage() {
 
   return (
     <Layout>
-      <div className="container d-flex justify-content-center">
-        <div className="leaderboard-card w-100" style={{ maxWidth: '900px' }}>
-          <div className="leaderboard-header">ESTADISTICAS</div>
+      <div className="mazo-card">
+        <div className="container d-flex justify-content-center">
+          <div className="leaderboard-card w-100" style={{ maxWidth: '900px' }}>
+            <div className="leaderboard-header">ESTADISTICAS</div>
 
-          <div className="leaderboard-row header static-header">
-            <div>#</div>
-            <div>Usuario</div>
-            <div>PJ</div>   
-            <div>G</div>
-            <div>E</div>
-            <div>P</div>
-            <div
-              className="sortable-header"  
-              onClick={() => {
-                setOrdenAscendente(!ordenAscendente);
-                setPaginaActual(1); // Resetear a la primera página al cambiar el orden
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              Winrate <i className={`bi ${ordenAscendente ? 'bi-caret-up-fill' : 'bi-caret-down-fill'}`}></i>
+            <div className="leaderboard-row header static-header">
+              <div>#</div>
+              <div>Usuario</div>
+              <div>PJ</div>   
+              <div>G</div>
+              <div>E</div>
+              <div>P</div>
+              <div
+                className="sortable-header"  
+                onClick={() => {
+                  setOrdenAscendente(!ordenAscendente);
+                  setPaginaActual(1); // Resetear a la primera página al cambiar el orden
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                Winrate <i className={`bi ${ordenAscendente ? 'bi-caret-up-fill' : 'bi-caret-down-fill'}`}></i>
+              </div>
             </div>
+
+            {statsPaginadas.map((j, index) => ( // Volvemos a usar 'index' aquí para la posición DENTRO de la página
+              <div
+                key={j.usuario} // Asegúrate de que 'j.usuario' sea siempre único, o usa un ID de la API
+                className={`leaderboard-row animated-row ${j.winrate === winrateMasAltoGeneral && !ordenAscendente ? 'best' : ''}`}
+                // La clase 'best' solo se aplica si es el winrate más alto Y el orden es descendente
+              >
+                {/* Cálculo de posición corregido */}
+                <div>{(paginaActual - 1) * itemsPorPagina + index + 1}</div> 
+                <div>{j.usuario}</div>
+                <div>{j.total_partidas}</div>
+                <div>{j.partidas_ganadas}</div>
+                <div>{j.partidas_empatadas}</div>
+                <div>{j.partidas_perdidas}</div>
+                <div>{j.winrate}%</div>
+              </div>
+            ))}
+
+            {/* ... (El código de las filas vacías y paginación se mantiene igual) ... */}
+            {Array.from({ length: itemsPorPagina - statsPaginadas.length }).map((_, i) => (
+              <div className="leaderboard-row" key={`empty-${i}`}>
+                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+              </div>
+            ))}
+
+            <nav className="d-flex justify-content-center pagination">
+              <ul className="pagination">
+                {Array.from({ length: totalPaginas }).map((_, i) => (
+                  <li key={i} className={`page-item ${i + 1 === paginaActual ? 'active' : ''}`}>
+                    <button className="page-link" onClick={() => setPaginaActual(i + 1)}>
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
-
-          {statsPaginadas.map((j, index) => ( // Volvemos a usar 'index' aquí para la posición DENTRO de la página
-            <div
-              key={j.usuario} // Asegúrate de que 'j.usuario' sea siempre único, o usa un ID de la API
-              className={`leaderboard-row animated-row ${j.winrate === winrateMasAltoGeneral && !ordenAscendente ? 'best' : ''}`}
-              // La clase 'best' solo se aplica si es el winrate más alto Y el orden es descendente
-            >
-              {/* Cálculo de posición corregido */}
-              <div>{(paginaActual - 1) * itemsPorPagina + index + 1}</div> 
-              <div>{j.usuario}</div>
-              <div>{j.total_partidas}</div>
-              <div>{j.partidas_ganadas}</div>
-              <div>{j.partidas_empatadas}</div>
-              <div>{j.partidas_perdidas}</div>
-              <div>{j.winrate}%</div>
-            </div>
-          ))}
-
-          {/* ... (El código de las filas vacías y paginación se mantiene igual) ... */}
-          {Array.from({ length: itemsPorPagina - statsPaginadas.length }).map((_, i) => (
-            <div className="leaderboard-row" key={`empty-${i}`}>
-              <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            </div>
-          ))}
-
-          <nav className="d-flex justify-content-center pagination">
-            <ul className="pagination">
-              {Array.from({ length: totalPaginas }).map((_, i) => (
-                <li key={i} className={`page-item ${i + 1 === paginaActual ? 'active' : ''}`}>
-                  <button className="page-link" onClick={() => setPaginaActual(i + 1)}>
-                    {i + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
       </div>
     </Layout>
