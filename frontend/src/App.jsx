@@ -4,7 +4,9 @@ import RegistroPage from './pages/registro/RegistroPage';
 import LoginPage from './pages/login/LoginPage';
 import EditarUsuarioPage from './pages/editar/EditarUsuarioPage.jsx';
 import MisMazosPage from './pages/mazos/MisMazosPage';
-import JugarPage from './pages/play/JugarPage';
+
+
+// (más adelante se agregara RegistroPage, LoginPage, etc.)
 
 function App() {
   return (
@@ -14,7 +16,6 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/editar" element={<EditarUsuarioPage />} />
       <Route path="/mis-mazos" element={<MisMazosPage />} />
-      <Route path="/jugar" element={<JugarPage />} />
     </Routes>
   );
 }
