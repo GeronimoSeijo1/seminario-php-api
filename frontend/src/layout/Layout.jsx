@@ -6,7 +6,7 @@ function Layout({ children }) {
   return (
     <div className="layout-grid">
       <HeaderComponent />
-      <main className="main-content container">
+      <main className="main-content">
         {children}
       </main>
       <FooterComponent />

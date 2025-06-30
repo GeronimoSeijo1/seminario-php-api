@@ -6,6 +6,11 @@ function NavBarComponent() {
   const token = localStorage.getItem('token');
   const nombre = localStorage.getItem('usuario');
 
+  // Función para manejar el logout
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/'; // Redirige a la página de inicio
+  };
 
   return (
     <nav className="main-nav"> 
@@ -34,29 +39,25 @@ function NavBarComponent() {
               <NavLink to="/registro" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>CREAR CUENTA</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/login" className={({ isActive }) => `btn btn-danger access-button ${isActive ? 'active' : ''}`}> ACCEDER </NavLink>
+              <NavLink to="/login" className={({ isActive }) => `btn access-button ${isActive ? 'active' : ''}`}> ACCEDER </NavLink>
             </li>
           </>
         ) : (
           <>
             <li className="nav-item">
-              <NavLink to="/mis-mazos" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Mis Mazos</NavLink>
+              <NavLink to="/mis-mazos" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>MIS MAZOS</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/addMazo" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Agregar Mazo</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/editar" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>Editar usuario</NavLink>
+              <NavLink to="/editar" className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}>EDITAR USUARIO</NavLink>
             </li>
             <li className="nav-item">
               <button
                 className="logout-button" // Clase personalizada para el botón de logout
-                onClick={() => {
-                  localStorage.clear();
-                  window.location.href = '/';
-                }}
+                onClick={handleLogout} // Usamos la función handleLogout
+                title="Cerrar sesión" // Añadimos un título para accesibilidad
               >
-                Logout
+                {/* Icono de Bootstrap */}
+                <i className="bi bi-box-arrow-right"></i> 
               </button>
             </li>
           </>

@@ -24,6 +24,22 @@ export const getUsername = () => {
   return decoded?.user || null;
 };
 
+// Devuelve el string del token directamente desde localStorage
+export const getToken = () => {
+  return localStorage.getItem("token"); 
+};
+
+// Devuelve un objeto unificado con los datos del usuario (id y nombre)
+// para ser compatible con la estructura esperada en JugarPage.jsx
+export const getUserData = () => {
+  const id = getUserId();
+  const nombre = getUsername(); // Usamos getUsername para obtener el 'nombre'
+  if (id && nombre) {
+    return { id, nombre };
+  }
+  return null;
+};
+
 // Devuelve si el usuario está logueado
 export const isAuthenticated = () => {
   const token = localStorage.getItem("token");

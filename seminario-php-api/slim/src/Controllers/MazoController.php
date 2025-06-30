@@ -235,4 +235,33 @@ class MazoController
             return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
     }
+
+    //Listar cartas de un mazo - AGREGADO PARA EL FRONT
+    public function listarCartasDeUnMazo(Request $request, Response $response, array $args){
+        try {
+            $user = $request->getAttribute('user');
+            $usuarioId = (int) $args['usuarioId'];
+            $mazoId = (int) $args['mazoId'];
+
+            if ($user['id'] !== $usuarioId) {
+                $response->getBody()->write(json_encode(['error' => 'Acceso inválido']));
+                return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+            }
+
+            if (!$this->mazoModel->perteneceAUsuario($mazoId, $usuarioId)) {
+                $response->getBody()->write(json_encode(['error' => 'El mazo no pertenece al usuario']));
+                return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
+            }
+
+            $cartas = $this->mazoModel->listaCartasMazo($mazoId);
+            $response->getBody()->write(json_encode(['cartas' => $cartas]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            error_log("Error al listar cartas del mazo: " . $e->getMessage());
+            $response->getBody()->write(json_encode(['error' => 'Error interno del servidor.']));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        }
+    }
+
 }

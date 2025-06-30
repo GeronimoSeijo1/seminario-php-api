@@ -4,8 +4,8 @@ import AddMazoPage from './pages/mazo/addMazoPage';
 import RegistroPage from './pages/registro/RegistroPage';
 import LoginPage from './pages/login/LoginPage';
 import EditarUsuarioPage from './pages/editar/EditarUsuarioPage.jsx';
-
-// (más adelante se agregara RegistroPage, LoginPage, etc.)
+import MisMazosPage from './pages/mazos/MisMazosPage';
+import JugarPage from './pages/Jugar/JugarPage';
 
 function App() {
   return (
@@ -15,6 +15,8 @@ function App() {
       <Route path="/registro" element={<RegistroPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/editar" element={<EditarUsuarioPage />} />
+      <Route path="/mis-mazos" element={<MisMazosPage />} />
+      <Route path="/jugar/:idPartida" element={<JugarPage />} />
     </Routes>
   );
 }
