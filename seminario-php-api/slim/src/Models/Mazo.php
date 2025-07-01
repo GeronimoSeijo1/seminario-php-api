@@ -105,6 +105,7 @@ class Mazo
     public static function listaCartas(?int $atributo_id, ?string $nombre): array{
         $db = DB::getConnection();
         $sql = "SELECT
+                c.id AS carta_id,
                 c.nombre AS nombre_carta,
                 a.nombre AS nombre_atributo,
                 c.ataque_nombre AS nombre_ataque,

@@ -28,6 +28,10 @@ function AddMazoPage() {
       });
   }, [filtroNombre, filtroAtributo]);
 
+  useEffect(() => {
+  console.log(cartas); // 👀 esto te dice cómo viene cada carta
+}, [cartas]);
+
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
 
@@ -78,10 +82,10 @@ function AddMazoPage() {
 
   return (
     <Layout>
-    <div className="mazo-card w-100" style={{ maxWidth: '550px' }}>  
-      <div className="container mt-4">
+    <div className="mazo-card add-mazo w-100" style={{ maxWidth: '1100px' }}>  
+      <div className="container-fluid mt-4">
         <div className="row justify-content-center">
-        <div className="col-30 col-lg-28">
+        <div className="col-12 col-lg-58">
         <h2>Nuevo mazo</h2>
 
         <div className="form-group mb-2">
@@ -94,7 +98,7 @@ function AddMazoPage() {
           />
         </div>
 
-        <div className="row my-3">
+        <div className="row my-3 filtros">
           <div className="col-md-4">
             <label>Nombre:</label>
             <input
@@ -133,8 +137,8 @@ function AddMazoPage() {
             <div key={index} className="carta-item">
               <input
                 type="checkbox"
-                checked={seleccionadas.includes(index + 1)} // o carta.id si lo tenés
-                onChange={() => alternarCarta(index + 1)}
+                checked={seleccionadas.includes(carta.carta_id)} // o carta.id si lo tenés
+                onChange={() => alternarCarta(carta.carta_id)}
                 className="carta-checkbox"
               />
 
