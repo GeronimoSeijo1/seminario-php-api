@@ -82,7 +82,7 @@ function AddMazoPage() {
 
   return (
     <Layout>
-    <div className="mazo-card w-100" style={{ maxWidth: '1100px' }}>  
+    <div className="mazo-card add-mazo w-100" style={{ maxWidth: '1100px' }}>  
       <div className="container-fluid mt-4">
         <div className="row justify-content-center">
         <div className="col-12 col-lg-58">
@@ -98,7 +98,7 @@ function AddMazoPage() {
           />
         </div>
 
-        <div className="row my-3">
+        <div className="row my-3 filtros">
           <div className="col-md-4">
             <label>Nombre:</label>
             <input
