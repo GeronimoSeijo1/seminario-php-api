@@ -14,9 +14,9 @@ function JugarPage() {
   
   // Estados para gestionar la UI del juego
   const [cartasEnManoUsuario, setCartasEnManoUsuario] = useState([]);
-  const [cartasServidorEnMano, setCartasServidorEnMano] = useState([]); // Este estado contendrá los detalles completos de las cartas del servidor en mano
+  const [cartasServidorEnMano, setCartasServidorEnMano] = useState([]); 
   const [cartaJugadaUsuario, setCartaJugadaUsuario] = useState(null);
-  const [cartaJugadaServidor, setCartaJugadaServidor] = useState(null); // Aquí se guardará la carta completa del servidor jugada
+  const [cartaJugadaServidor, setCartaJugadaServidor] = useState(null); 
   const [mensajeJugada, setMensajeJugada] = useState(''); 
   const [partidaFinalizada, setPartidaFinalizada] = useState(false);
   const [resultadoPartida, setResultadoPartida] = useState(''); 
@@ -168,7 +168,7 @@ function JugarPage() {
 
       const response = await realizarJugada(idPartida, cardId, token);
       const {
-        carta_servidor: serverCardIdFromBackend, // Renombramos a 'serverCardIdFromBackend' para mayor claridad
+        carta_servidor: serverCardIdFromBackend,
         resultado_jugada: resultadoJugada,
         ganador_juego: isPartidaFinalizada
       } = response.data;
@@ -176,14 +176,10 @@ function JugarPage() {
       console.log("handlePlayCard: Jugada exitosa. Respuesta de la API:", response.data);
       console.log("handlePlayCard: ID de carta del servidor devuelta del backend:", serverCardIdFromBackend);
 
-
-      // ****** MODIFICACIÓN CLAVE AQUI: Buscar los detalles completos de la carta del servidor ******
-      const fullServerCardDetails = cartasServidorEnMano.find(
-        c => c.id === serverCardIdFromBackend // Buscar por el ID de la carta que devolvió el backend
-      );
+      const fullServerCardDetails = cartasServidorEnMano.find(c => c.id === serverCardIdFromBackend);
 
       if (fullServerCardDetails) {
-        setCartaJugadaServidor(fullServerCardDetails); // Asignar el objeto completo encontrado
+        setCartaJugadaServidor(fullServerCardDetails);
         console.log("handlePlayCard: Carta del servidor jugada con detalles completos (encontrados en mano):", fullServerCardDetails);
 
         // También actualiza la mano del servidor eliminando la carta que acaba de jugar
@@ -195,12 +191,10 @@ function JugarPage() {
 
       } else {
         console.error("handlePlayCard: No se encontraron detalles completos para la carta del servidor jugada con ID:", serverCardIdFromBackend);
-        // Fallback: Si no se encuentran los detalles completos, setea null o un objeto por defecto
-        // para evitar que se rompa el CardComponent si espera propiedades.
-        setCartaJugadaServidor(null); // O podrías setear { id: serverCardIdFromBackend, nombre: '?', atributo: '?', puntos_ataque: '?' }
+        setCartaJugadaServidor(null);
         setError('No se pudieron obtener los detalles completos de la carta del servidor jugada.');
       }
-      // ***************************************************************************************
+
       setMensajeJugada(resultadoJugada);
 
       setCartasEnManoUsuario(prevCartas => prevCartas.filter(c => c.id !== cardId));

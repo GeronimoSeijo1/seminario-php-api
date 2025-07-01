@@ -1,44 +1,40 @@
-/* src/assets/styles/StatPage.css */
-
-/* Fondo general (este archivo ya no define el background del body, lo hace index.css) */
 body {
-  /* Estas propiedades del body han sido movidas a index.css para .layout-grid */
   margin: 0;
   padding: 0;
-  height: 100%; /* Asegura que el body ocupe el 100% de la altura del viewport */
-  overflow-y: auto; /* Permite scroll si el contenido es más largo que el viewport */
+  height: 100%;
+  overflow-y: auto;
 }
 
 .leaderboard-card {
-  background-color: rgba(255, 255, 255, 0.10); /* vidrio polarizado */
+  background-color: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  padding: 1.5rem; /* Reducido de 2rem para hacer la tarjeta más compacta*/
+  padding: 1.5rem;
   border-radius: 1rem;
-  color: white; /* Asegura que el color del texto base sea blanco */
+  color: white;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
 .leaderboard-header {
-  font-size: 1.8rem; /* Ligeramente más pequeño para el título*/
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 1rem; /* Reducido de 1.5rem para acercar el título a la tabla */
+  margin-bottom: 1rem;
 }
 
 .leaderboard-row {
   display: grid;
   grid-template-columns: 0.5fr 2.5fr repeat(4, 0.5fr) 1fr;
   align-items: center;
-  padding: 0.6rem 1rem; /* Reducido de 0.8rem para hacer las filas más delgadas*/
-  margin-bottom: 0.4rem; /* Reducido de 0.6rem para acercar las filas */
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.4rem;
   border-radius: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.2); /* Aumentada la opacidad para mejor legibilidad */
+  background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  min-height: 40px; /* Reducido de 50px para hacer las filas más pequeñas*/
-  font-size: 0.95rem; /* Ligeramente más pequeña la fuente de las filas */
-  color: white; /* Asegura que el color del texto de la fila sea blanco */
+  min-height: 40px;
+  font-size: 0.95rem;
+  color: white;
 }
 
 .leaderboard-row > div {
@@ -60,7 +56,7 @@ body {
 
 .animated-row:hover {
   transform: scale(1.01);
-  background-color: rgba(255, 255, 255, 0.25); /* Un poco más opaco en hover */
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .leaderboard-row.header,
@@ -68,31 +64,31 @@ body {
   background-color: transparent;
   box-shadow: none;
   font-weight: bold;
-  margin-bottom: 0.6rem; /* Ajustado para estar más cerca de las filas de datos */
+  margin-bottom: 0.6rem;
   transition: none;
   transform: none;
   text-align: center;
-  font-size: 0.9rem; /* Un poco más pequeño el encabezado de las columnas */
+  font-size: 0.9rem;
 }
 
 .leaderboard-row.best {
   background-color: goldenrod;
-  color: black; /* Texto negro para asegurar legibilidad en el fondo amarillo*/
+  color: black;
   font-weight: 600;
 }
 
-.sortable-header {
+.static-header .sortable-header {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  cursor: pointer;
+  pointer-events: auto; /* Re-habilita los eventos del ratón */
+  cursor: pointer
 }
 
-/* Estilos para la paginación */
 .pagination {
-  margin-top: 1rem; /* Reducido el margen superior de la paginación */
-  margin-bottom: 0; /* Asegurar que no haya margen inferior si no es necesario */
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .pagination .page-item .page-link {
@@ -100,15 +96,15 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.7);
   border-radius: 0.5rem;
-  margin: 0 0.2rem; /* Reducido el espacio entre botones de paginación */
+  margin: 0 0.2rem;
   transition: all 0.3s ease;
-  min-width: 35px; /* Reducido el ancho mínimo para hacerlos más compactos */
-  height: 35px; /* Altura fija para que sean cuadrados o proporcionales */
-  display: flex; /* Usar flexbox para centrar el número */
+  min-width: 35px;
+  height: 35px;
+  display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  font-size: 0.85rem; /* Fuente más pequeña para los números de página */
+  font-size: 0.85rem;
 }
 
 .pagination .page-item .page-link:hover {
@@ -124,7 +120,6 @@ body {
   font-weight: bold;
 }
 
-/* Para eliminar el foco azul de Bootstrap al hacer click  */
 .pagination .page-item .page-link:focus,
 .pagination .page-item.active .page-link:focus {
   box-shadow: none;

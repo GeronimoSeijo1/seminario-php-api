@@ -1,38 +1,29 @@
-/* frontend/src/assets/styles/CardComponent.css */
-/* Asegúrate de que las variables de color estén definidas en GamePage.css o un archivo global */
-:root {
-  --primary-color: #6a0dad; 
-  --secondary-color: #a7f3d0; 
-  --light-text: #e0f2f7; 
-}
-
-
-.poke-card { /* Clase renombrada */
-  width: 160px; /* Aumenta el ancho de la carta para más espacio */
-  height: 220px; /* Aumenta el alto de la carta para más espacio */
-  border: 4px solid #050505;/*var(--secondary-color); /* Borde más pronunciado y color de acento */
-  border-radius: 12px; /* Esquinas más redondeadas */
+.poke-card { 
+  width: 160px; 
+  height: 220px; 
+  border: 4px solid #050505;
+  border-radius: 12px; 
   perspective: 1000px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Sombra más fuerte */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); 
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
-  background-color: #ffffff; /* Asegura un fondo blanco para el anverso */
+  background-color: #ffffff; 
   transform-style: preserve-3d;
   flex-shrink: 0;
 }
 
-.poke-card:hover { /* Clase renombrada */
+.poke-card:hover { 
   transform: translateY(-10px) scale(1.08);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
   border-color: #ffeb3b;
 }
 
-.poke-card-inner { /* Clase renombrada */
+.poke-card-inner { 
   width: 100%;
   height: 100%;
   position: absolute;
@@ -46,13 +37,13 @@
   text-align: center;
 }
 
-.poke-card-front { /* Clase renombrada */
+.poke-card-front { 
   background-color: #ffffff;
   transform: rotateY(0deg);
   color: #333;
 }
 
-.poke-card-back { /* Clase renombrada */
+.poke-card-back { 
   background: radial-gradient(circle at center, #c91919 0%, #CC0000 100%);
   border: 2px solid #050505;
   transform: rotateY(180deg);
@@ -65,7 +56,6 @@
   text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
-/* Clases para el efecto de volteo de la carta (renombradas) */
 .poke-card.poke-card-back-face .poke-card-front {
   transform: rotateY(180deg);
 }
@@ -74,7 +64,7 @@
   transform: rotateY(0deg);
 }
 
-.poke-card-details { /* Clase renombrada */
+.poke-card-details { 
   font-size: 1em;
   width: 100%;
   display: flex;
@@ -84,7 +74,7 @@
   flex-grow: 1;
 }
 
-.poke-card-name { /* Clase renombrada */
+.poke-card-name { 
   margin: 0;
   font-size: 1.4em;
   white-space: normal;
@@ -97,62 +87,15 @@
   margin-bottom: 8px;
 }
 
-.poke-card-attribute, /* Clase renombrada */
-.poke-card-attack { /* Clase renombrada */
+.poke-card-attribute,
+.poke-card-attack {
   margin: 5px 0;
   color: #666;
   font-size: 1.1em;
   font-weight: 600;
 }
 
-/* Estilo para la carta cuando está "activa" o es jugada (renombrada) */
 .poke-card.active-card {
     border: 3px solid #ffcc00;
     box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
-}
-
-/* Responsive adjustments for CardComponent (renombradas) */
-@media (max-width: 768px) {
-  .poke-card {
-    width: 130px;
-    height: 180px;
-  }
-  .poke-card-name {
-    font-size: 1.2em;
-  }
-  .poke-card-attribute, .poke-card-attack {
-    font-size: 1em;
-  }
-  .poke-card-back-symbol {
-    font-size: 2.5em;
-  }
-}
-
-@media (max-width: 480px) {
-  .poke-card {
-    width: 110px;
-    height: 150px;
-    border-width: 2px;
-    border-radius: 10px;
-  }
-  .poke-card-inner {
-    padding: 10px;
-  }
-  .poke-card-name {
-    font-size: 1em;
-    margin-bottom: 5px;
-  }
-  .poke-card-details {
-    font-size: 0.9em;
-  }
-  .poke-card-attribute, .poke-card-attack {
-    font-size: 0.9em;
-    margin: 3px 0;
-  }
-  .poke-card-back {
-    font-size: 1.8em;
-  }
-  .poke-card-back-symbol {
-    font-size: 2em;
-  }
 }

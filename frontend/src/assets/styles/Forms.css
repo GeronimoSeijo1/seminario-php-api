@@ -1,138 +1,102 @@
-/* Este archivo contiene estilos personalizados para los formularios, incluyendo el login. */
-
-/* El contenedor principal del formulario. Las propiedades de flexbox para centrado
-   se manejan ahora en el JSX de LoginPage con clases de Bootstrap. */
-/* .container {
-     display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; 
-}*/
-
-/* El div 'left' es el contenedor de la tarjeta del formulario de login.
-   Mantiene el efecto de vidrio polarizado y sombra personalizada. */
 .left {
-    text-align: center; /* Centra el contenido dentro de este div */
-    width: 100%; /* Asegura que ocupe el ancho disponible */
-    
-    /* Tus estilos de "vidrio polarizado" y sombra para el contenedor del formulario */
-    background-color: rgba(255, 255, 255, 0.10); /* Fondo blanco semi-transparente */
-    backdrop-filter: blur(8px); /* Efecto de desenfoque */
-    -webkit-backdrop-filter: blur(8px); /* Compatibilidad con navegadores WebKit */
-    border-radius: 1rem; /* Bordes redondeados */
-    color: white; /* Color de texto base blanco */
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); /* Sombra suave y oscura */
+    text-align: center;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-
-/* Estilo específico para el título del login.
-   Aseguramos la fuente Kanit y el color blanco.
-   La alineación y el margen inferior se manejan con clases de Bootstrap en el JSX. */
 .left .title {
-    font-family: 'Kanit', sans-serif; /* Aplica la fuente Kanit */
+    font-family: 'Kanit', sans-serif;
     text-shadow: none;
-    color: rgb(254, 254, 254); /* Color de texto blanco */
-    /* text-align y margin-bottom ahora se manejan con clases de Bootstrap (text-center, mb-4) */
+    color: rgb(254, 254, 254);
 }
 
-/* Estilos para el formulario. Se alinea el contenido y se gestiona la dirección. */
 .form {
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Asegura que los elementos hijos se estiren al ancho completo */
+    align-items: stretch;
 }
 
-/* Estilos para las etiquetas de los campos del formulario. */
 .form-label {
-    text-align: left; /* Alinea el texto de la etiqueta a la izquierda */
+    text-align: left;
     text-shadow: none;
-    color: rgb(254, 254, 254); /* Color de texto blanco */
-    margin-bottom: 5px; /* Espacio debajo de la etiqueta */
-    font-size: 1em; /* Un poco más grande que el texto normal */
+    color: rgb(254, 254, 254);
+    margin-bottom: 5px;
+    font-size: 1em;
     font-weight: 600;
-    display: block; /* Asegura que el label ocupe su propia línea para la alineación */
-    width: 100%; /* Asegura que el label ocupe todo el ancho disponible */
+    display: block;
+    width: 100%;
 }
 
-/* Estilos para los campos de entrada de texto, contraseña, etc.
-   Sobreescribimos los estilos por defecto de Bootstrap para personalización. */
 input.form-control {
-    background-color: rgba(255, 255, 255, 0.2); /* Fondo transparente para el efecto vidrio polarizado */
-    color: rgb(254, 254, 254); /* Color de texto blanco */
-    border: 1px solid rgba(255, 255, 255, 0.4); /* Borde sutil */
-    padding: 14px 18px; /* Aumenta el padding para hacer los inputs más grandes */
-    font-size: 1.05em; /* Ligeramente más grande la fuente dentro del input */
-    border-radius: .25rem; /* Radio de borde predeterminado de Bootstrap */
+    background-color: rgba(255, 255, 255, 0.2);
+    color: rgb(254, 254, 254);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 14px 18px;
+    font-size: 1.05em;
+    border-radius: .25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
 
-/* Estilos para el placeholder de los inputs. */
 input.form-control::placeholder {
-    color: rgba(255, 255, 255, 0.7); /* Placeholder más visible */
+    color: rgba(255, 255, 255, 0.7);
 }
 
-/* Estilos para el foco de los inputs:
-   Cambiamos el borde a rojo, la sombra a blanco semi-transparente,
-   y aseguramos que el fondo se mantenga transparente. */
 input.form-control:focus {
-    color: rgb(254, 254, 254); /* Mantener el color de texto blanco */
-    background-color: rgba(255, 255, 255, 0.25); /* Ligero cambio de transparencia en foco */
-    border-color: rgb(255, 255, 255, 0.25); /* Rojo de Bootstrap para el borde */
-    outline: 0; /* Quita el outline por defecto del navegador */
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.7); /* Sombra blanca con transparencia */
+    color: rgb(254, 255, 254);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgb(255, 255, 255, 0.25);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.7);
 }
 
-/* Estilos para el botón de submit (Loguearme). */
 .btn.btn-primary { 
-    background-color: #CC0000; /* Fondo rojo */
-    border-color: #CC0000; /* Borde rojo */
-    color: white; /* Texto blanco */
-    padding: 14px 18px; /* Ajusta el padding para que coincida con los inputs */
-    font-size: 1.05em; /* Ajusta el tamaño de la fuente para que coincida con los inputs */
+    background-color: #CC0000;
+    border-color: #CC0000;
+    color: white;
+    padding: 14px 18px;
+    font-size: 1.05em;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn.btn-primary:hover {
-    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
-    border-color: #bd2130; /* Borde rojo más oscuro al pasar el ratón */
+    background-color: #c82333;
+    border-color: #bd2130;
 }
 
-
-
-/* Estilos para el botón secundario (Volver al Inicio).
-   Aumentamos la especificidad añadiendo .btn al selector. */
 .btn.btn-outline-secondary-custom {
-    /* Hacemos el botón claramente visible por defecto */
-    color: white; /* Texto blanco completamente opaco */
-    border-color: rgba(255, 255, 255, 0.8); /* Borde blanco más visible */
-    background-color: rgba(255, 255, 255, 0.15); /* Fondo blanco con más opacidad para visibilidad */
-    padding: 14px 18px; /* Ajusta el padding para que coincida con los inputs */
-    font-size: 1.05em; /* Ajusta el tamaño de la fuente para que coincida con los inputs */
-    transition: all 0.3s ease; /* Transición suave para todos los cambios */
+    color: white;
+    border-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 14px 18px;
+    font-size: 1.05em;
+    transition: all 0.3s ease;
 }
 
 .btn.btn-outline-secondary-custom:hover {
-    color: white; /* Color de texto blanco al pasar el ratón */
-    background-color: rgba(255, 255, 255, 0.25); /* Fondo blanco más visible al pasar el ratón */
-    border-color: white; /* Borde blanco al pasar el ratón */
+    color: white;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: white;
 }
 
 .btn.btn-outline-secondary-custom:focus {
     color: white;
     background-color: rgba(255, 255, 255, 0.25);
     border-color: white;
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.6); /* Sombra de foco blanca ligeramente más intensa */
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.6);
 }
 
-
-/* Estilos para los mensajes de error.
-   Utilizamos las clases de alerta de Bootstrap y ajustamos si es necesario. */
 .alert.alert-danger {
-  font-size: 0.9em; /* Ajustar el tamaño de la fuente si es necesario */
-  margin-bottom: 1rem; /* Margen inferior para separarlo del título */
+    font-size: 0.9em;
+    margin-bottom: 1rem;
 }
 
 .alert.alert-danger ul {
-    list-style-type: none; /* Quita los puntos de la lista */
+    list-style-type: none;
     padding: 0;
     margin: 0;
 }

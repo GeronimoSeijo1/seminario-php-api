@@ -1,7 +1,7 @@
 // src/pages/deck/AddMazoPage.jsx
 import { useEffect, useState } from 'react';
 import Layout from '../../layout/Layout.jsx';
-import { getCartas, getMazos, addMazo } from '../../services/apiServices.js';
+import { getCartas,getUserMazos, addMazo } from '../../services/apiServices.js';
 import '../../assets/styles/addMazoPage.css';
 
 function AddMazoPage() {
@@ -28,10 +28,6 @@ function AddMazoPage() {
       });
   }, [filtroNombre, filtroAtributo]);
 
-  useEffect(() => {
-  console.log(cartas); // 👀 esto te dice cómo viene cada carta
-}, [cartas]);
-
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
 
@@ -50,7 +46,7 @@ function AddMazoPage() {
     setError('');
     setMazoGuardado(false);
 
-    const response = await getMazos(userId, token);
+    const response = await getUserMazos(userId, token);
     const mazos = response.data["lista de mazos del usuario logueado"] || [];
 
     if (mazos.length >= 3) {

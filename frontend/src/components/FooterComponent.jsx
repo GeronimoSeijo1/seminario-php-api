@@ -1,4 +1,4 @@
-import '../assets/styles/FooterComponent.css'; // Importa el CSS para el footer
+import '../assets/styles/FooterComponent.css'; 
 
 function FooterComponent() {
   return (

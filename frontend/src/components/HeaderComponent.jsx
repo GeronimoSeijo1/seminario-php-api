@@ -10,16 +10,16 @@ function HeaderComponent() {
     <header className="app-header">
       <div className="container d-flex justify-content-between align-items-center py-2">
         <div
-          className="d-flex align-items-center header-logo-area" /* Usamos header-logo-area para agrupar */
+          className="d-flex align-items-center header-logo-area" 
           style={{ cursor: 'pointer' }}
           onClick={() => navigate('/')}
         >
           <img
-            src={logo} /* Usar el Pokeball.svg */
+            src={logo} 
             alt="Pokebattle logo"
             className="pokebattle-logo-img"
           />
-          <span className="pokebattle-text">PokeBattle</span> {/* Texto al lado del logo */}
+          <span className="pokebattle-text">PokeBattle</span> 
         </div>
         <NavBarComponent />
       </div>

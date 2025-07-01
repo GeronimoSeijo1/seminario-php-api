@@ -1,5 +1,4 @@
-// src/components/NavBarComponent.jsx
-import { Link, NavLink } from 'react-router-dom'; // Asegúrate de importar NavLink
+import { NavLink } from 'react-router-dom';
 import '../assets/styles/NavBarComponent.css'; 
 
 function NavBarComponent() {
@@ -9,7 +8,7 @@ function NavBarComponent() {
   // Función para manejar el logout
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = '/'; // Redirige a la página de inicio
+    window.location.href = '/';
   };
 
   return (
@@ -17,17 +16,16 @@ function NavBarComponent() {
       <ul className="nav-list"> 
         {token && (
           <>
-            <li className="nav-item user-greeting"> {/* Clase para el saludo */}
+            <li className="nav-item user-greeting"> 
               <span className="pokemon-link">Hola, {nombre}</span>
             </li>
           </>
         )}
-        {/* ENLACE PARA ESTADISTICAS / RUTA PRINCIPAL */}
         <li className="nav-item">
           <NavLink
             to="/"
             className={({ isActive }) => `pokemon-link ${isActive ? 'active' : ''}`}
-            end // Importante: 'end' asegura que solo se active si la ruta es EXACTAMENTE '/'
+            end 
           >
             INICIO
           </NavLink>
@@ -52,9 +50,9 @@ function NavBarComponent() {
             </li>
             <li className="nav-item">
               <button
-                className="logout-button" // Clase personalizada para el botón de logout
-                onClick={handleLogout} // Usamos la función handleLogout
-                title="Cerrar sesión" // Añadimos un título para accesibilidad
+                className="logout-button" 
+                onClick={handleLogout} 
+                title="Cerrar sesión" 
               >
                 {/* Icono de Bootstrap */}
                 <i className="bi bi-box-arrow-right"></i> 

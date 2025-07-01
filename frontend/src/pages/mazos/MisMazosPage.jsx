@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUserMazos , getCartasDeMazo, editarNombreMazo, eliminarMazo, iniciarPartida } from '../../services/apiServices.js'; // Importa iniciarPartida
-import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import Layout from '../../layout/Layout.jsx';
 import '../../assets/styles/MisMazos.css';
 import Modal from "../../components/Modal.jsx";
@@ -42,7 +42,6 @@ function MisMazosPage() {
             setMostrarModal(true);
         } catch (error) {
             console.error("Error al obtener cartas del mazo:", error);
-            // Considera usar un modal o un toast para mostrar este error al usuario
             alert("Error al cargar las cartas del mazo.");
         }
     };
@@ -95,7 +94,7 @@ function MisMazosPage() {
         }
     };
 
-    // NUEVA FUNCIÓN: Iniciar una partida
+    // FUNCIÓN: Iniciar una partida
     const handleIniciarPartida = async (mazoId) => {
         setIsStartingGame(true); // Activar estado de carga
         setGameStartError(null); // Limpiar errores previos
@@ -109,10 +108,10 @@ function MisMazosPage() {
 
         try {
             // 1. Iniciar la partida en el backend
-            // El endpoint /partidas ahora devuelve id_partida y cartas
             const partidaResponse = await iniciarPartida(mazoId, token);
             const { id_partida: idPartida, cartas: cartasEnMano } = partidaResponse.data;
             console.log(partidaResponse.data);
+
             // 2. Redirigir a JugarPage, pasando el id de la partida y las cartas en mano
             navigate(`/jugar/${idPartida}`, {
                 state: {
@@ -128,13 +127,10 @@ function MisMazosPage() {
         }
     };
 
-    //useEffect() cuando quiero que algo se ejecute automáticamente
     useEffect(() => {
         const cargarMazos = async () => {
             if (!userId || !token) {
                 console.warn("No hay userId o token, no se cargarán los mazos.");
-                // Opcional: redirigir a login si no hay token
-                // navigate('/login'); 
                 return;
             }
             try {
@@ -208,7 +204,7 @@ function MisMazosPage() {
                         </div>
                         <div>
                             <button 
-                                className="btn" // Usamos btn-primary de Bootstrap para que se vea bien
+                                className="btn" 
                                 onClick={() => handleIniciarPartida(mazo.id)}
                                 disabled={isStartingGame} // Deshabilitar mientras se inicia la partida
                             >

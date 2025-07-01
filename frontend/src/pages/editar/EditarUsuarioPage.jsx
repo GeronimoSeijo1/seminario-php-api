@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { editUser } from '../../services/apiServices.js';
+import { useNavigate } from "react-router-dom"; 
 import Layout from '../../layout/Layout.jsx';
-import '../../assets/styles/Forms.css'; // Mantenemos tu CSS personalizado
-import { useNavigate } from "react-router-dom"; // Importamos useNavigate para el botón "Volver al Inicio"
+import '../../assets/styles/Forms.css'; 
 
 function EditarUsuarioPage() {
     const [errores, setErrores] = useState([]);
@@ -43,11 +43,8 @@ function EditarUsuarioPage() {
 
         try {
             await editUser(userId, data, token);
-            // Reemplazamos alert() con una lógica de UI de mensaje, como se recomienda.
-            console.log("Perfil actualizado con éxito"); // alert("Perfil actualizado con éxito");
+            console.log("Perfil actualizado con éxito"); 
             setErrores([]);
-            // Opcional: navegar a otra página después de la edición exitosa
-            // navigate("/perfil"); 
         } catch (error) {
             if (error.response?.data?.error) {
                 setErrores([error.response.data.error]);
@@ -57,24 +54,17 @@ function EditarUsuarioPage() {
         }
     };
 
-    // Función para manejar el clic del botón "Volver al Inicio"
     const handleGoBack = () => {
-        navigate("/"); // Navega a la ruta raíz (inicio)
+        navigate("/"); 
     };
 
     return (
         <Layout>
-            {/* Contenedor principal: d-flex para centrar, min-vh-100 para altura completa de la vista */}
-            {/* y py-5 para padding vertical */}
             <div className="container d-flex justify-content-center align-items-center min-vh-100 py-2">
-                {/* 'left' ahora será una 'card' o un div con estilos personalizados */}
-                {/* p-4 para padding, rounded para bordes redondeados, shadow-lg para una sombra grande */}
-                {/* mx-auto para centrar en anchos mayores, col-12 col-md-8 col-lg-6 para responsividad */}
                 <div className="left p-4 rounded shadow-lg mx-auto col-12 col-md-8 col-lg-6">
                     {errores.length > 0 && (
-                        // Componente de alerta de Bootstrap para errores
                           <div className="alert alert-danger" role="alert">
-                            <ul className="mb-0 ps-3"> {/* mb-0 quita margen inferior, ps-3 añade padding a la izquierda */}
+                            <ul className="mb-0 ps-3"> 
                                 {errores.map((err, i) => (
                                     <li key={i}>{err}</li>
                                 ))}
@@ -82,15 +72,11 @@ function EditarUsuarioPage() {
                         </div>
                     )}
 
-                    {/* h2 con clase 'text-center' de Bootstrap */}
-                    <h2 className="title text-center mb-4">EDITAR USUARIO</h2> {/* mb-4 para margen inferior */}
+                    <h2 className="title text-center mb-4">EDITAR USUARIO</h2>
 
-                    {/* form con g-3 para espaciado de grid, y noValidate para deshabilitar validación HTML5 por defecto si la manejas con JS */}
                     <form className='form needs-validation' onSubmit={handleSubmit} noValidate>
-                        {/* Campo de Nombre */}
-                        <div className="mb-3"> {/* mb-3 para margen inferior */}
+                        <div className="mb-3"> 
                             <label htmlFor="nombreInput" className="form-label">Ingresa tu nombre</label>
-                            {/* form-control para el estilo de input de Bootstrap */}
                             <input
                                 type="text"
                                 className="form-control"
@@ -99,10 +85,8 @@ function EditarUsuarioPage() {
                             />
                         </div>
 
-                        {/* Campo de Contraseña */}
-                        <div className="mb-3"> {/* mb-3 para margen inferior */}
+                        <div className="mb-3"> 
                             <label htmlFor="passwordInput" className="form-label">Ingresa nueva contraseña</label>
-                            {/* form-control para el estilo de input de Bootstrap */}
                             <input
                                 type="password"
                                 className="form-control"
@@ -111,10 +95,8 @@ function EditarUsuarioPage() {
                             />
                         </div>
 
-                        {/* Campo de Repetir Contraseña */}
-                        <div className="mb-4"> {/* mb-4 para margen inferior, un poco más para separar del botón */}
+                        <div className="mb-4">
                             <label htmlFor="passwordRepInput" className="form-label">Repetir contraseña</label>
-                            {/* form-control para el estilo de input de Bootstrap */}
                             <input
                                 type="password"
                                 className="form-control"
@@ -123,14 +105,8 @@ function EditarUsuarioPage() {
                             />
                         </div>
 
-                        {/* Contenedor para los botones con display flex para que estén lado a lado */}
-                        {/* d-flex para flexbox, justify-content-between para espacio entre ellos, gap-2 para espacio entre botones */}
-                        {/* flex-column flex-md-row para que se apilen en móviles y se pongan en fila en escritorio */}
                         <div className="d-flex justify-content-between gap-2 flex-column flex-md-row mt-3">
-                            {/* Botón de Editar */}
                             <button type="submit" className="btn btn-primary flex-grow-1">Editar</button>
-                            {/* Botón Volver al Inicio */}
-                            {/* btn-outline-secondary-custom es una clase personalizada para este botón */}
                             <button type="button" className="btn btn-outline-secondary-custom flex-grow-1" onClick={handleGoBack}>
                                 Volver al Inicio
                             </button>

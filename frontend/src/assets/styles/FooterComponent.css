@@ -1,19 +1,17 @@
-/* src/assets/styles/FooterComponent.css */
-
 .app-footer {
   background-color: black;
-  color: rgba(255, 255, 255, 0.7); /* Texto blanco/grisáceo semi-transparente */
+  color: rgba(255, 255, 255, 0.7); 
   text-align: center;
-  padding: 1rem 0; /* Padding vertical para el contenido del footer */
-  margin-top: 0.5rem; /* Espacio superior para separarlo del contenido principal */
+  padding: 1rem 0; 
+  margin-top: 0.5rem; 
   /* La línea divisoria */
-  border-top: 1px solid #1c1c1c; /* Una línea blanca sutil y semi-transparente */
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3); /* Sombra que se proyecta hacia arriba */
-  z-index: 999; /* Asegura que la sombra esté visible sobre el contenido del body */
+  border-top: 1px solid #1c1c1c;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3); 
+  z-index: 999; 
 }
 
 /* Ajustes para el párrafo dentro del footer */
 .app-footer p {
-  margin-bottom: 0; /* Quita el margen inferior predeterminado de los párrafos de Bootstrap */
-  font-size: 0.85rem; /* Un poco más pequeño para el texto de copyright */
+  margin-bottom: 0; 
+  font-size: 0.85rem; 
 }

@@ -3,17 +3,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  /*min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 40px));*/
-  /* Ruta de la imagen de fondo - Asume que 'tablero.jpg' está en /public/images/ */
-  background-image: url('../images/tablero1.png'); /* ¡IMPORTANTE: Mueve tu imagen 'tablero.jpg' a la carpeta 'public/images/'! */
+  background-image: url('../images/tablero1.png'); 
   background-size: cover;
   background-position: center;
-  /*background-attachment: fixed;  Hace que el fondo sea estático al hacer scroll */
   padding: 20px;
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden; /* Evita scroll horizontal en móviles */
+  overflow-x: hidden; 
 }
 
 .instruction-message {
@@ -30,8 +27,8 @@
 /* ZONAS de cartas (mano y servidor) */
 .card-zone {
   border-radius: 1rem;
-  border: 5px solid rgba(0, 0, 0, 1); /* Borde más discreto */
-  padding: 0.8rem; /* Menos padding */
+  border: 5px solid rgba(0, 0, 0, 1); 
+  padding: 0.8rem; 
   width: 100%;
   max-width: 960px; 
   margin: 1rem auto; 
@@ -42,7 +39,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: black;
-  margin-bottom: 0.8rem; /* Menos margen inferior para acercar a las cartas */
+  margin-bottom: 0.8rem; 
   text-transform: uppercase;
 }
 
@@ -50,14 +47,13 @@
 .player-cards {
   display: flex;
   justify-content: center;
-  gap: 25px; /* Más espacio entre cartas para que no se vean como línea */
+  gap: 25px; 
   flex-wrap: wrap;
-  padding: 15px 0; /* Más padding vertical */
-  min-height: 250px; /* Asegura un espacio grande para las cartas */
-  align-items: center; /* Centrar verticalmente las cartas dentro de la zona */
+  padding: 15px 0; 
+  min-height: 250px; 
+  align-items: center; 
 }
 
-/* Área central del tablero donde se muestran las cartas jugadas */
 .game-board {
   flex-grow: 1;
   display: flex;
@@ -73,9 +69,9 @@
 .played-cards {
   display: flex;
   justify-content: center;
-  gap: 100px; /* Mucho más espacio entre cartas jugadas */
+  gap: 100px; 
   width: 100%;
-  min-height: 300px; /* Altura mínima para las cartas jugadas */
+  min-height: 300px; 
   align-items: center;
 }
 
@@ -185,104 +181,4 @@
   background-color: white;
   color: #CC0000;
   border: white ;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .game-container {
-    padding: 10px;
-  }
-  h2 {
-    font-size: 1.8em;
-  }
-  .card-zone {
-    padding: 0.8rem; /* Menos padding en móvil */
-    margin: 0.8rem auto;
-  }
-  .section-title {
-    font-size: 1.3rem;
-  }
-  .server-cards-placeholder,
-  .player-cards {
-    gap: 10px;
-  }
-  .game-board {
-    padding: 20px;
-    gap: 10 px;
-  }
-  .played-cards {
-    gap: 30px;
-    min-height: 200px;
-  }
-  .player-played-card h4,
-  .server-played-card h4 {
-    font-size: 1.1em;
-  }
-  .waiting-message {
-    font-size: 1.2em;
-  }
-  .round-result {
-    padding: 15px 20px;
-    font-size: 1.1em;
-  }
-  .game-result-modal {
-    padding: 25px;
-  }
-  .game-result-modal h3 {
-    font-size: 1.8em;
-  }
-  .game-result-modal p {
-    font-size: 1.3em;
-  }
-  .game-result-modal button,
-  .game-container .btn {
-    padding: 10px 20px;
-    font-size: 1em;
-  }
-}
-
-@media (max-width: 480px) {
-  h2 {
-    font-size: 1.4em;
-  }
-  .card-zone {
-    padding: 0.5rem; /* Menos padding aún */
-    margin: 0.5rem auto;
-  }
-  .section-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.8rem;
-  }
-  .instruction-message {
-    font-size: 0.9em;
-    padding: 5px 10px;
-  }
-  /* Importante para que las cartas sean visibles en móviles */
-  .card { 
-    width: 90px; /* Reducir el tamaño base pero mantener proporción */
-    height: 120px;
-  }
-  .card-name {
-    font-size: 0.8em;
-  }
-  .card-attribute, .card-attack {
-    font-size: 0.7em;
-  }
-  .played-cards {
-    gap: 15px;
-    min-height: 150px;
-  }
-  .round-result {
-    font-size: 0.9em;
-    padding: 10px;
-  }
-  .game-result-modal {
-    padding: 20px;
-  }
-  .game-result-modal h3 {
-    font-size: 1.5em;
-  }
-  .game-result-modal p {
-    font-size: 1.1em;
-  }
 }

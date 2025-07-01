@@ -1,48 +1,40 @@
-/* src/assets/styles/HeaderComponent.css */
-
 .app-header {
-  background-color: #111111; /* Fondo oscuro sólido para el header */
+  background-color: #111111; 
   padding: 0.6rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Sombra personalizada */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); 
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 3px solid #1c1c1c; /* Línea divisora en la parte inferior del header */
+  border-bottom: 3px solid #1c1c1c; 
 }
 
 .app-header .container {
-  max-width: 900px; /* Asegura que el contenido del header no sea excesivamente ancho */
-  margin: 0 auto; /* Centrar el contenedor */
-  padding: 0 15px; /* Añadir un poco de padding horizontal para evitar que el contenido toque los bordes */
+  max-width: 900px; 
+  margin: 0 auto; 
+  padding: 0 15px; 
 }
 
 .header-logo-area {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* Eliminamos la transición transform y el :hover transform */
-  /* transition: transform 0.2s ease;  <-- ELIMINADO */
 }
 
-/* .header-logo-area:hover { */
-/* transform: scale(1.02); <-- ELIMINADO */
-/* } */
-
 .pokebattle-logo-img {
-  height: 50px; /* Tamaño del logo */
-  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.4)); /* Sombra sutil para el logo */
+  height: 50px; 
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.4)); 
 }
 
 .pokebattle-text {
   font-family: 'Kanit', sans-serif; /* Aplicar la fuente Kanit */
-  font-size: 2.2rem; /* Tamaño de fuente para PokeBattle */
-  font-weight: 700; /* Negrita */
+  font-size: 2.2rem; 
+  font-weight: 700;
   color:#D8E5EA;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
-  transition: color 0.3s ease; /* Transición para el color al hacer hover */
+  transition: color 0.3s ease;
 }
 
 .header-logo-area:hover .pokebattle-text {
-  color: #CC0000; /* Rojo vibrante al hacer hover */
+  color: #CC0000; 
 }
