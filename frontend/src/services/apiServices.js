@@ -18,7 +18,7 @@ export const editUser = (id, datos, token) => {
       Authorization: `Bearer ${token}`
     }
   });
-});
+};
 
 export const getCartas = (filtros = {}) => api.get('/cartas', { params: filtros });
 
@@ -34,7 +34,7 @@ export const getUserMazos = (userId, token) => {
       Authorization: `Bearer ${token}`
     }
   });
-});
+};
 
 export const getCartasDeMazo = (userId, mazoId, token) => {
   return api.get(`/usuarios/${userId}/mazos/${mazoId}/cartas`, {
