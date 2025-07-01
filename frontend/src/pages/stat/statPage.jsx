@@ -56,7 +56,6 @@ function StatPage() {
 
   return (
     <Layout>
-      <div className="mazo-card">
         <div className="container d-flex justify-content-center">
           <div className="leaderboard-card w-100" style={{ maxWidth: '900px' }}>
             <div className="leaderboard-header">ESTADISTICAS</div>
@@ -117,7 +116,6 @@ function StatPage() {
             </nav>
           </div>
         </div>
-      </div>
     </Layout>
   );
 }

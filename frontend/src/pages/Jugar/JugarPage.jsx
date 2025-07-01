@@ -264,9 +264,10 @@ function JugarPage() {
             <div className="game-result-modal">
               <h3>¡{resultadoPartida}!</h3>
               <button className="btn m-1" onClick={handlePlayAgain}>JUGAR OTRA VEZ</button>
-              <button className="btn m-1" onClick={handlePlayAgain}>VOLVER A INICIO</button>
+              
+              <button className="btn m-1" onClick={() => window.location.href = "/"} >VOLVER A INICIO</button>
             </div>
-          </div>
+          </div>  
         )}
 
         {/* Zona de cartas del servidor (mano) */}

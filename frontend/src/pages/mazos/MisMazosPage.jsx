@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getUserMazos , getCartasDeMazo, editarNombreMazo, eliminarMazo} from '../../services/apiServices.js';
-import { Link } from "react-router-dom";
+import { getUserMazos , getCartasDeMazo, editarNombreMazo, eliminarMazo, iniciarPartida } from '../../services/apiServices.js'; // Importa iniciarPartida
+import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate
 import Layout from '../../layout/Layout.jsx';
 import '../../assets/styles/MisMazos.css';
 import Modal from "../../components/Modal.jsx";
@@ -10,6 +10,9 @@ function MisMazosPage() {
     //Variables para controlar el login
     const userId =  localStorage.getItem("id");
     const token = localStorage.getItem("token");
+
+    // Hook de navegación
+    const navigate = useNavigate();
 
     //Estados para controlar el modal
     const [mazoSeleccionado, setMazoSeleccionado] = useState(null);
@@ -25,6 +28,11 @@ function MisMazosPage() {
     //Para errores en el nombre
     const [erroresNombre, setErroresNombre] = useState({});
 
+    // Estado para manejar el loading al iniciar partida
+    const [isStartingGame, setIsStartingGame] = useState(false);
+    const [gameStartError, setGameStartError] = useState(null);
+
+
     const verMazo = async (mazoId) => {
         try{
             const res = await getCartasDeMazo(userId, mazoId, token);
@@ -34,6 +42,8 @@ function MisMazosPage() {
             setMostrarModal(true);
         } catch (error) {
             console.error("Error al obtener cartas del mazo:", error);
+            // Considera usar un modal o un toast para mostrar este error al usuario
+            alert("Error al cargar las cartas del mazo.");
         }
     };
 
@@ -60,7 +70,7 @@ function MisMazosPage() {
             setMazos(res.data["lista de mazos del usuario logueado"]);
 
             // Limpiar el input y error
-            setNuevosNombres({ ...nuevosNombres, [mazoId]: "" });
+            setNuevosNombres({ ...nuevosNombres, [mazoId]: null });
             setErroresNombre({ ...erroresNombre, [mazoId]: null });
         } catch (error) {
             console.error("Error al editar el nombre del mazo:", error);
@@ -69,6 +79,7 @@ function MisMazosPage() {
     };
 
     const eliminar = async (mazoId) => {
+        // Reemplazamos window.confirm con un modal personalizado si lo tienes
         if (!window.confirm("¿Estás seguro de que deseas eliminar este mazo?")) return;
         try {
             await eliminarMazo(mazoId, token);
@@ -84,9 +95,48 @@ function MisMazosPage() {
         }
     };
 
+    // NUEVA FUNCIÓN: Iniciar una partida
+    const handleIniciarPartida = async (mazoId) => {
+        setIsStartingGame(true); // Activar estado de carga
+        setGameStartError(null); // Limpiar errores previos
+
+        if (!token) {
+            setGameStartError("No estás autenticado. Por favor, inicia sesión.");
+            setIsStartingGame(false);
+            navigate('/login'); // Redirigir al login si no hay token
+            return;
+        }
+
+        try {
+            // 1. Iniciar la partida en el backend
+            // El endpoint /partidas ahora devuelve id_partida y cartas
+            const partidaResponse = await iniciarPartida(mazoId, token);
+            const { id_partida: idPartida, cartas: cartasEnMano } = partidaResponse.data;
+            console.log(partidaResponse.data);
+            // 2. Redirigir a JugarPage, pasando el id de la partida y las cartas en mano
+            navigate(`/jugar/${idPartida}`, {
+                state: {
+                    cartasEnMano: cartasEnMano // Pasamos las cartas para evitar un fetch adicional
+                }
+            });
+
+        } catch (error) {
+            console.error("Error al iniciar la partida:", error.response?.data || error.message);
+            setGameStartError(error.response?.data?.error || "Error al iniciar la partida. Intenta de nuevo.");
+        } finally {
+            setIsStartingGame(false); // Desactivar estado de carga
+        }
+    };
+
     //useEffect() cuando quiero que algo se ejecute automáticamente
     useEffect(() => {
         const cargarMazos = async () => {
+            if (!userId || !token) {
+                console.warn("No hay userId o token, no se cargarán los mazos.");
+                // Opcional: redirigir a login si no hay token
+                // navigate('/login'); 
+                return;
+            }
             try {
                 const res = await getUserMazos(userId, token);
                 setMazos(res.data["lista de mazos del usuario logueado"]);
@@ -95,12 +145,13 @@ function MisMazosPage() {
                     setMazos([]); // lo tratamos como "sin mazos"
                 } else {
                     console.error("Error al cargar los mazos:", error);
+                    // Considera mostrar un mensaje de error al usuario
                 }
             }
         };
 
         cargarMazos();
-    }, [userId, token]);
+    }, [userId, token]); // Dependencias para recargar si cambian userId o token
 
     return (
         <>
@@ -108,6 +159,18 @@ function MisMazosPage() {
             <div className="container mis-mazos-container d-flex justify-content-center">
                 <div className="leaderboard-card w-100" style={{ maxWidth: '900px' }}>
                 <div className="leaderboard-header">MIS MAZOS</div>
+
+                {/* Mostrar error al iniciar partida si existe */}
+                {gameStartError && (
+                    <div className="alert alert-danger" role="alert">
+                        {gameStartError}
+                    </div>
+                )}
+                {isStartingGame && (
+                    <div className="alert alert-info" role="alert">
+                        Iniciando partida... por favor espera.
+                    </div>
+                )}
 
                 {mazos.length === 0 && (
                     <p className="sin-mazos">Aún no tenes asignado ningún mazo</p>
@@ -144,9 +207,13 @@ function MisMazosPage() {
                             )}
                         </div>
                         <div>
-                            <Link to={`/jugar/${mazo.id}`} className="btn">
-                                Jugar
-                            </Link>
+                            <button 
+                                className="btn" // Usamos btn-primary de Bootstrap para que se vea bien
+                                onClick={() => handleIniciarPartida(mazo.id)}
+                                disabled={isStartingGame} // Deshabilitar mientras se inicia la partida
+                            >
+                                {isStartingGame ? 'Iniciando...' : 'Jugar'}
+                            </button>
                         </div>
                     </div>
                     ))}
